@@ -130,16 +130,26 @@ function mountScrollWorld(container, config) {
 
   [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach(n => container.appendChild(n));
 
-  // Force un repaint de la couche fixe (`.sw-stage`). Bug de compositing (Chrome
-  // surtout) : une couche `position:fixed` peinte AVANT que l'image/vidéo ne se
-  // décode reste blanche jusqu'à ce qu'un scroll/resize l'invalide. Sur une landing
-  // sans scroll immédiat, le fond restait donc vide au chargement. On invalide
-  // explicitement la couche à chaque asset qui arrive.
-  let _rpRaf = 0;
+  // Bug de compositing (Chrome surtout) : une <img>/vidéo promue en couche GPU
+  // (via `will-change`) et peinte AVANT que ses pixels ne soient décodés reste
+  // BLANCHE jusqu'à ce qu'un scroll/resize l'invalide. En local (décodage instantané)
+  // invisible ; sur réseau (décodage tardif) le fond restait vide au chargement.
+  // Toggler `display` sur l'élément lui-même détruit puis recrée sa couche composite
+  // → repaint garanti (l'image est déjà décodée, aucune requête réseau refaite).
+  function forceRepaint(node) {
+    if (!node) return;
+    const d = node.style.display;
+    node.style.display = 'none';
+    void node.offsetHeight; // reflow
+    node.style.display = d;
+  }
+  // Repeint les scènes actuellement visibles dont l'asset est prêt (au chargement,
+  // uniquement le hero — donc pas de flash sur les scènes hors écran).
   function repaintFixed() {
-    cancelAnimationFrame(_rpRaf);
-    stage.style.transform = 'translateZ(0)';
-    _rpRaf = requestAnimationFrame(() => { stage.style.transform = ''; });
+    SEGMENTS.forEach(s => {
+      if (!s.visible) return;
+      if (s.img && s.img.complete && s.img.naturalWidth) forceRepaint(s.img);
+    });
   }
 
   // segment scenes
