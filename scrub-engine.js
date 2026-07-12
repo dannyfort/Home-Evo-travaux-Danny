@@ -130,10 +130,29 @@ function mountScrollWorld(container, config) {
 
   [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach(n => container.appendChild(n));
 
+  // Force un repaint de la couche fixe (`.sw-stage`). Bug de compositing (Chrome
+  // surtout) : une couche `position:fixed` peinte AVANT que l'image/vidéo ne se
+  // décode reste blanche jusqu'à ce qu'un scroll/resize l'invalide. Sur une landing
+  // sans scroll immédiat, le fond restait donc vide au chargement. On invalide
+  // explicitement la couche à chaque asset qui arrive.
+  let _rpRaf = 0;
+  function repaintFixed() {
+    cancelAnimationFrame(_rpRaf);
+    stage.style.transform = 'translateZ(0)';
+    _rpRaf = requestAnimationFrame(() => { stage.style.transform = ''; });
+  }
+
   // segment scenes
-  SEGMENTS.forEach(s => {
+  SEGMENTS.forEach((s, i) => {
     const scene = el('div', 'sw-scene'); scene.style.setProperty('--sw-accent', s.accent || '');
-    const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async'; img.loading = 'lazy';
+    const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
+    // La 1re scène est le hero, toujours visible : la charger en priorité. `lazy`
+    // la retarderait au-delà du 1er paint et laisserait le fond vide au démarrage.
+    img.loading = (i === 0) ? 'eager' : 'lazy';
+    if (i === 0) img.setAttribute('fetchpriority', 'high');
+    // Listener AVANT de poser src (capte aussi le cas image en cache) : quand la
+    // still arrive, on ré-applique l'état de scroll et on repeint la couche fixe.
+    img.addEventListener('load', () => { read(); repaintFixed(); });
     if (s.still) img.src = s.still;
     scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
@@ -207,7 +226,7 @@ function mountScrollWorld(container, config) {
         // Reveal the video (hide the still poster) only once a real frame has
         // painted — on iOS a seeked-but-never-played muted video stays blank, so
         // hiding the still on metadata alone would flash an empty scene.
-        v.addEventListener('seeked', () => { s.el.classList.add('has-clip'); }, { once: true });
+        v.addEventListener('seeked', () => { s.el.classList.add('has-clip'); repaintFixed(); }, { once: true });
         v.addEventListener('loadeddata', () => { try { v.pause(); } catch (e) {} if (userReady) primeVideo(v); });
         s.el.appendChild(v); s.video = v; s.hasClip = true;
       }).catch(() => { s.loading = false; });
@@ -318,8 +337,13 @@ function mountScrollWorld(container, config) {
   }
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', layout);
-  window.addEventListener('load', layout);
+  window.addEventListener('load', () => { layout(); repaintFixed(); });
   layout();
+  // Backstops : quelques repaints de la couche fixe pendant que les 1ers assets
+  // décodent, au cas où un `load` d'image serait manqué (cache, course au 1er paint).
+  requestAnimationFrame(repaintFixed);
+  setTimeout(repaintFixed, 200);
+  setTimeout(repaintFixed, 800);
   // Watchdog : si la chaîne rAF est suspendue et que ses callbacks sont droppés
   // (onglet throttlé, bfcache, webview), les seeks vidéo s'arrêtent ET le handler
   // de scroll reste verrouillé (ticking=true → plus aucun read()). En famine de
