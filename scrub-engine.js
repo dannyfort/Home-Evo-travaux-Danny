@@ -148,25 +148,35 @@ function mountScrollWorld(container, config) {
   function repaintFixed() {
     SEGMENTS.forEach(s => {
       if (!s.visible) return;
-      if (s.img && s.img.complete && s.img.naturalWidth) forceRepaint(s.img);
+      if (s.img && s.img.parentNode && s.img.complete && s.img.naturalWidth) forceRepaint(s.img);
+      if (s.video && s.el.classList.contains('has-clip')) forceRepaint(s.video);
     });
   }
 
-  // segment scenes
+  // segment scenes.
+  // CORRECT PAR CONSTRUCTION : l'<img> n'est insérée dans le DOM qu'une fois
+  // DÉCODÉE (img.decode() → appendChild). Une couche composite ne peut donc
+  // jamais se peindre vide — c'était la cause du fond blanc au chargement en
+  // prod (décodage réseau tardif ; en local le décodage instantané masquait
+  // le bug). Filet : insertion forcée à 3 s si decode() traîne, les backstops
+  // repeindront.
   SEGMENTS.forEach((s, i) => {
     const scene = el('div', 'sw-scene'); scene.style.setProperty('--sw-accent', s.accent || '');
     const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
-    // La 1re scène est le hero, toujours visible : la charger en priorité. `lazy`
-    // la retarderait au-delà du 1er paint et laisserait le fond vide au démarrage.
-    img.loading = (i === 0) ? 'eager' : 'lazy';
     if (i === 0) img.setAttribute('fetchpriority', 'high');
-    // Listener AVANT de poser src (capte aussi le cas image en cache) : quand la
-    // still arrive, on ré-applique l'état de scroll et on repeint la couche fixe.
-    img.addEventListener('load', () => { read(); repaintFixed(); });
-    if (s.still) img.src = s.still;
-    scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
+    stage.appendChild(scene);
+    if (s.still) {
+      img.src = s.still;
+      const insert = () => {
+        if (img.parentNode) return;
+        scene.appendChild(img);
+        read(); repaintFixed();
+      };
+      if (img.decode) img.decode().then(insert).catch(insert); else insert();
+      setTimeout(insert, 3000);
+    }
   });
 
   // per-section copy / route / nav
@@ -349,11 +359,11 @@ function mountScrollWorld(container, config) {
   window.addEventListener('orientationchange', layout);
   window.addEventListener('load', () => { layout(); repaintFixed(); });
   layout();
-  // Backstops : quelques repaints de la couche fixe pendant que les 1ers assets
-  // décodent, au cas où un `load` d'image serait manqué (cache, course au 1er paint).
-  requestAnimationFrame(repaintFixed);
-  setTimeout(repaintFixed, 200);
-  setTimeout(repaintFixed, 800);
+  // Backstops : repeint périodiquement les scènes visibles pendant les 4 premières
+  // secondes (décodage réseau lent, cache, course au 1er paint). Idempotent et
+  // quasi gratuit ; s'arrête tout seul.
+  let _bs = 0;
+  const _bsIv = setInterval(() => { repaintFixed(); if (++_bs >= 11) clearInterval(_bsIv); }, 350);
   // Watchdog : si la chaîne rAF est suspendue et que ses callbacks sont droppés
   // (onglet throttlé, bfcache, webview), les seeks vidéo s'arrêtent ET le handler
   // de scroll reste verrouillé (ticking=true → plus aucun read()). En famine de
