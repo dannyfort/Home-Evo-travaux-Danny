@@ -130,12 +130,8 @@ function mountScrollWorld(container, config) {
 
   [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach(n => container.appendChild(n));
 
-  // Bug de compositing (Chrome surtout) : une <img>/vidéo promue en couche GPU
-  // (via `will-change`) et peinte AVANT que ses pixels ne soient décodés reste
-  // BLANCHE jusqu'à ce qu'un scroll/resize l'invalide. En local (décodage instantané)
-  // invisible ; sur réseau (décodage tardif) le fond restait vide au chargement.
-  // Toggler `display` sur l'élément lui-même détruit puis recrée sa couche composite
-  // → repaint garanti (l'image est déjà décodée, aucune requête réseau refaite).
+  // Force la re-création de la couche composite d'un nœud (utile pour la vidéo
+  // au premier seeked sur certains GPU).
   function forceRepaint(node) {
     if (!node) return;
     const d = node.style.display;
@@ -143,41 +139,54 @@ function mountScrollWorld(container, config) {
     void node.offsetHeight; // reflow
     node.style.display = d;
   }
-  // Repeint les scènes actuellement visibles dont l'asset est prêt (au chargement,
-  // uniquement le hero — donc pas de flash sur les scènes hors écran).
   function repaintFixed() {
     SEGMENTS.forEach(s => {
       if (!s.visible) return;
-      if (s.img && s.img.parentNode && s.img.complete && s.img.naturalWidth) forceRepaint(s.img);
       if (s.video && s.el.classList.contains('has-clip')) forceRepaint(s.video);
     });
   }
 
   // segment scenes.
-  // CORRECT PAR CONSTRUCTION : l'<img> n'est insérée dans le DOM qu'une fois
-  // DÉCODÉE (img.decode() → appendChild). Une couche composite ne peut donc
-  // jamais se peindre vide — c'était la cause du fond blanc au chargement en
-  // prod (décodage réseau tardif ; en local le décodage instantané masquait
-  // le bug). Filet : insertion forcée à 3 s si decode() traîne, les backstops
-  // repeindront.
+  // POSTERS EN <canvas> (pas <img>) — décision post-mortem : sur une page fixe
+  // sans scroll initial, Chrome peut ne jamais rasteriser la couche GPU d'une
+  // grande <img> décodée tardivement (pipeline occupé par les blobs vidéo) →
+  // fond blanc au chargement, uniquement en réseau réel. drawImage en CPU sur
+  // un canvas rend le bitmap immédiatement et de façon déterministe : le bug
+  // ne peut plus exister. (Diagnostic : l'<img> avait ses pixels — un
+  // ctx.drawImage de test les lisait — mais ne se peignait jamais.)
+  function drawCover(cv, im) {
+    if (!im || !im.naturalWidth || !cv) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const W = Math.max(1, Math.round(window.innerWidth * dpr));
+    const H = Math.max(1, Math.round(window.innerHeight * dpr));
+    if (cv.width !== W) cv.width = W;
+    if (cv.height !== H) cv.height = H;
+    const k = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+    const dw = im.naturalWidth * k, dh = im.naturalHeight * k;
+    // équivalent object-fit:cover + object-position:center 42%
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(im, (W - dw) / 2, (H - dh) * 0.42, dw, dh);
+  }
   SEGMENTS.forEach((s, i) => {
     const scene = el('div', 'sw-scene'); scene.style.setProperty('--sw-accent', s.accent || '');
-    const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async';
-    if (i === 0) img.setAttribute('fetchpriority', 'high');
-    s.el = scene; s.img = img; s.video = null; s.hasClip = false;
+    const cv = document.createElement('canvas'); cv.className = 'sw-scene__still';
+    s.el = scene; s.img = cv; s.imgEl = null; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
-    stage.appendChild(scene);
+    scene.appendChild(cv); stage.appendChild(scene);
     if (s.still) {
-      img.src = s.still;
-      const insert = () => {
-        if (img.parentNode) return;
-        scene.appendChild(img);
-        read(); repaintFixed();
-      };
-      if (img.decode) img.decode().then(insert).catch(insert); else insert();
-      setTimeout(insert, 3000);
+      const im = new Image();
+      s.imgEl = im;
+      if (i === 0) try { im.fetchPriority = 'high'; } catch (e) {}
+      const draw = () => { drawCover(cv, im); read(); };
+      im.addEventListener('load', () => {
+        (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(draw);
+      }, { once: true });
+      im.src = s.still;
     }
   });
+  // Redessine les posters au resize/rotation (les canvas sont dimensionnés au viewport).
+  function redrawStills() { SEGMENTS.forEach(s => drawCover(s.img, s.imgEl)); }
 
   // per-section copy / route / nav
   const copies = [], dots = [];
@@ -220,6 +229,7 @@ function mountScrollWorld(container, config) {
     SEGMENTS.forEach(s => { s.start = off * vh; off += s.w; s.end = off * vh; });
     totalW = off;
     track.style.height = (totalW * vh + vh) + 'px';   // +1vh so the last flight completes
+    if (typeof redrawStills === 'function') redrawStills();
     read();
   }
 
