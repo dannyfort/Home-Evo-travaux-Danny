@@ -8,99 +8,711 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23274733'/%3E%3Cpath d='M30 52 50 34l20 18v20H30z' fill='%23F2EFE9'/%3E%3Cpath d='M60 40c8-6 14-4 14-4s-1 9-7 12-11-3-7-8z' fill='%238FB33E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* Thème HET — gagne sur les tokens du moteur (@layer sw) */
-  :root, .sw-root {
-    --sw-bg: #F2EFE9;          /* pierre clair — même fond que les scènes générées */
-    --sw-ink: #18211A;         /* encre vert-noir */
-    --sw-ink-soft: #5f645a;
-    --sw-accent: #274733;      /* vert forêt structurel */
-    --sw-font-display: 'Schibsted Grotesk', 'Archivo', system-ui, sans-serif;
-    --sw-font-body: 'Instrument Sans', system-ui, sans-serif;
+  html, body { margin: 0; padding: 0; background: #f2efe9; }
+  body { font-family: 'Instrument Sans', system-ui, sans-serif; color: #26221c; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: var(--het-acc, #96522c); }
+  a:hover { color: #26211a; }
+  :focus-visible { outline: 2px solid var(--het-acc, #96522c); outline-offset: 2px; border-radius: 4px; }
+  input, textarea, button { font-family: inherit; }
+  input::placeholder, textarea::placeholder { color: #948c80; }
+  @keyframes hetFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes hetWordIn { from { opacity: 0; transform: translateY(0.6em); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  @keyframes hetRiseIn { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  @keyframes hetChipIn { 0% { opacity: 0; transform: scale(0.4) translateY(10px); } 62% { opacity: 1; transform: scale(1.07) translateY(-2px); } 80% { transform: scale(0.98) translateY(0); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+  @keyframes hetNavIn { from { opacity: 0; transform: translateY(-12px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  @keyframes hetWheel { 0% { transform: translateY(0); opacity: 0.9; } 65% { transform: translateY(7px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+  @keyframes hetMenuIn { 0% { opacity: 0; transform: translate(-50%, -42px) scale(0.9); filter: blur(12px); } 55% { opacity: 1; filter: blur(0px); } 75% { transform: translate(-50%, 3px) scale(1.004); } 100% { opacity: 1; transform: translate(-50%, 0) scale(1); filter: blur(0px); } }
+  /* états hover/focus (portés depuis les attributs style-hover/style-focus du canvas) */
+  .het-dot-row:hover .het-dot-tip { opacity: 1 !important; transform: translateX(0) !important; }
+  .het-navlink { position: relative; }
+  .het-navlink::after { content: ''; position: absolute; left: 10px; bottom: 3px; width: 0; height: 1.5px; background: #2f5540; transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+  .het-navlink:hover::after { width: calc(100% - 20px); }
+  .het-navlink:hover { background: linear-gradient(100deg, rgba(255,255,255,0) 25%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 75%); border-radius: 8px; }
+  .het-link-arrow:hover { letter-spacing: 0.02em; }
+  .het-hov-card { transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .het-hov-card:hover { box-shadow: 0 44px 84px -26px rgba(38, 32, 24, 0.5) !important; }
+  .het-field { height: 34px; padding: 0 11px; border-radius: 11px; border: 1px solid rgba(228, 222, 207, 0.9); background: rgba(251, 250, 247, 0.55); font-size: 14px; color: #26221c; outline-offset: 0; }
+  textarea.het-field { height: auto; padding: 9px 12px; border-radius: 12px; resize: none; line-height: 1.4; }
+  .het-field:focus { border-color: var(--het-acc-b, #c97e4a); background: rgba(251, 250, 247, 0.8); }
+  .het-label { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #2F5540; }
+  .het-chip { padding: 6px 13px; border-radius: 999px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.05em; cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s; background: rgba(251, 250, 247, 0.5); color: #3d3831; border: 1px solid rgba(228, 222, 207, 0.9); }
+  .het-chip.is-on { background: #2f5540; color: #fbfaf7; border-color: #2f5540; }
+  .het-btn-primary { margin-top: 4px; height: 42px; border: none; border-radius: 999px; background: #2f5540; color: #fbfaf7; font-size: 14.5px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+  .het-btn-primary:hover { background: #24432f; }
+  .het-btn-ghost { display: grid; place-items: center; height: 36px; border-radius: 999px; border: 1px solid rgba(47, 85, 64, 0.4); color: #2f5540; font-size: 13.5px; font-weight: 500; text-decoration: none; transition: border-color 0.3s, background 0.3s; }
+  .het-btn-ghost:hover { border-color: var(--het-acc, #96522c); background: rgba(251, 250, 247, 0.4); }
+  .het-cta-menu { display: inline-grid; place-items: center; height: 38px; padding: 0 18px; border-radius: 999px; background: #2f5540; color: #fbfaf7 !important; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.3s; white-space: nowrap; }
+  .het-cta-menu:hover { background: #24432f; }
+  .het-tag { padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(228, 222, 207, 0.9); background: rgba(251, 250, 247, 0.4); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #3d3831; }
+  /* Mobile — parité avec la landing v7 : nav masquée, cartes recalées plein écran */
+  @media (max-width: 860px) {
+    /* !important : ces éléments portent un display inline posé par le canvas */
+    .het-menu-links, .het-menu-tel { display: none !important; }
+    #het-menu { gap: 12px; }
+    #card-hero { width: calc(100vw - 36px) !important; }
+    .het-hero-glow { left: -26vw !important; top: -16vw !important; width: 150vw !important; height: 130vw !important; }
+    #card-devis { width: min(88vw, 340px) !important; }
+    #card-svc-ouvrir, #card-svc-eclairer, #card-svc-reveler { width: min(92vw, 460px) !important; }
+    #card-svc-isoler { width: min(92vw, 480px) !important; }
+    .het-svc-pad { padding: 20px 22px 18px !important; }
+    #card-temoignage { width: 92vw !important; }
+    .het-tem-pad { padding: 22px 22px 20px !important; }
+    #card-port-head { width: 92vw !important; }
+    #card-kpi-1, #card-kpi-2, #card-kpi-3, #card-kpi-4 { width: min(64vw, 240px) !important; }
+    #card-proj-1, #card-proj-2, #card-proj-3, #card-proj-4 { width: 43vw !important; }
+    .het-proj-media { height: 96px !important; }
+    #card-footer { max-width: 94vw !important; }
+    #het-rail { right: 8px; }
+    .het-dot-row { padding: 8px !important; }
   }
-  /* Signature HET : chiffres & numéros en mono */
-  .sw-copy__num { font-family: 'JetBrains Mono', ui-monospace, monospace; color: #274733; }
-  .sw-copy__eyebrow { letter-spacing: .18em; }
-  /* Le bouton principal en vert forêt plutôt qu'encre (le seul gros aplat vert de la page) */
-  .sw-btn--primary { background: #274733; }
-  .sw-btn--primary:hover { background: #1d3727; }
-  .sw-topcta { background: #274733; }
+  @media (prefers-reduced-motion: reduce) { .het-anim { animation: none !important; } }
+  /* Tier C — pas de WebGL / prefers-reduced-motion : fallback statique lisible */
+  .het-tier-c .het-layer { position: static !important; perspective: none !important; pointer-events: auto !important; height: auto !important; }
+  .het-tier-c .het-card { position: relative !important; visibility: visible !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; filter: none !important; margin: 28px auto !important; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(228, 222, 207, 0.85); max-width: min(92vw, 560px); }
+  .het-tier-c .het-track { display: none; }
+  .het-tier-c #card-hero { position: relative !important; visibility: visible !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; margin: 28px auto !important; max-width: min(92vw, 560px); }
+  .het-tier-c #card-hint { display: none !important; }
+  .het-tier-c .het-anim { animation: none !important; transform: none !important; opacity: 1 !important; filter: none !important; }
 </style>
 </head>
 <body>
-<div id="monde"></div>
 
-<script src="scrub-engine.js?v=7"></script>
+<!-- ===================== FILM (WebGL) ===================== -->
+<canvas id="het-canvas" aria-hidden="true" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; display: block;"></canvas>
+
+<!-- scroll track: the film's timeline (native scroll, no scroll-jacking) -->
+<div id="het-track" class="het-track" aria-hidden="true" style="height: 1100vh;"></div>
+
+<!-- ===================== GLASS UI LAYER ===================== -->
+<div id="het-layer" class="het-layer" style="position: fixed; inset: 0; z-index: 5; pointer-events: none; perspective: 1700px; perspective-origin: 50% 50%;">
+
+  <!-- SCENE 1 · La naissance — titre posé en bas-gauche, halo blanc feathered pour la lisibilité (PAS une carte) -->
+  <div id="card-hero" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(46vw, 620px); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-hero-glow" aria-hidden="true" style="position: absolute; left: -260px; top: -115px; pointer-events: none; width: 980px; height: 905px; opacity: 0.88; background: radial-gradient(closest-side at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.98) 28%, rgba(255, 255, 255, 0.82) 46%, rgba(255, 255, 255, 0.5) 62%, rgba(255, 255, 255, 0.2) 78%, rgba(255, 255, 255, 0) 94%); filter: blur(28px);"></div>
+    <div style="position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 15px;">
+      <p class="het-anim" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.24em; color: #26221c; animation: hetRiseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.18s backwards;">01 / 06</p>
+      <p class="het-anim" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #2f5540; animation: hetRiseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;">Rénovation · Agrandissement · Aménagement — Rouen &amp; Normandie</p>
+      <h1 style="margin: 0; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(32px, 3.4vw, 54px); line-height: 1.06; letter-spacing: -0.02em; color: #21201c;">
+        <span style="display: block;"><span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.42s backwards;">Votre</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.48s backwards;">entreprise</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.54s backwards;">de</span></span>
+        <span style="display: block;"><span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;">rénovation</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.66s backwards;">à</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.72s backwards;">Rouen,</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.78s backwards;">du</span></span>
+        <span style="display: block;"><span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.84s backwards;">gros</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s backwards;">œuvre</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.96s backwards;">aux</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.02s backwards;">finitions.</span></span>
+      </h1>
+      <p class="het-anim" style="margin: 0; max-width: 52ch; font-size: clamp(14.5px, 1.05vw, 16.5px); line-height: 1.6; color: #3d3831; animation: hetRiseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.15s backwards;">Depuis 25 ans, Home Eco Travaux transforme maisons, appartements et locaux professionnels dans toute l'agglomération rouennaise. Un seul interlocuteur, tous les corps de métier.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px;">
+        <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.3s backwards;">25 ans</span>
+        <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.42s backwards;">Tous corps de métier</span>
+        <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.54s backwards;">Devis gratuit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE DEVIS CARD — pièce maîtresse de l'intro, revient à la finale -->
+  <div id="card-devis" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 336px; border-radius: 22px; background: rgba(251, 250, 247, 0.55); box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div style="padding: 19px 21px 17px;">
+      <p style="margin: 0 0 5px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Devis gratuit · Sans engagement</p>
+      <h2 style="margin: 0 0 3px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 23px; line-height: 1.1; color: #26221c;">Parlons de votre projet</h2>
+      <p id="devis-lead" style="display: none; margin: 8px 0 0; font-size: 13.5px; line-height: 1.55; color: #3d3831;">Une idée, un besoin, une rénovation à chiffrer ? Décrivez-nous votre projet : nous vous recontactons rapidement pour un devis gratuit et sans engagement.</p>
+      <div aria-live="polite" role="status">
+        <div id="devis-success" style="display: none;">
+          <div style="padding: 26px 4px 14px; text-align: center;">
+            <div style="width: 40px; height: 40px; margin: 0 auto 14px; border-radius: 999px; background: #2f5540; display: grid; place-items: center;">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3.5 9.5 7 13l7.5-8" stroke="#f2efe9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <p style="margin: 0 0 6px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 19px; color: #26221c;">Merci ! Nous revenons vers vous sous 24h.</p>
+            <p style="margin: 0; font-size: 12.5px; color: #6e675c;">Ou écrivez-nous : <a href="mailto:contact@home-eco-travaux.com" style="color: var(--het-acc, #96522c);">contact@home-eco-travaux.com</a></p>
+          </div>
+        </div>
+      </div>
+      <form id="devis-form" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label for="devis-nom" class="het-label">Votre nom</label>
+          <input id="devis-nom" name="name" type="text" autocomplete="name" required class="het-field">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label for="devis-contact" class="het-label">Téléphone ou email</label>
+          <input id="devis-contact" name="contact" type="text" autocomplete="tel" required class="het-field">
+        </div>
+        <div role="group" aria-label="Type de projet" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px;">
+          <button type="button" class="het-chip" aria-pressed="false">Rénovation intérieure</button>
+          <button type="button" class="het-chip" aria-pressed="false">Gros œuvre</button>
+          <button type="button" class="het-chip" aria-pressed="false">Commerce</button>
+          <button type="button" class="het-chip" aria-pressed="false">Énergétique</button>
+          <button type="button" class="het-chip" aria-pressed="false">Autre</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label for="devis-projet" class="het-label">Votre projet en quelques mots <span style="text-transform: none; letter-spacing: 0; color: #948c80;">(optionnel)</span></label>
+          <textarea id="devis-projet" name="message" rows="2" class="het-field"></textarea>
+        </div>
+        <button type="submit" data-magnetic="true" class="het-btn-primary">Demander un devis gratuit</button>
+        <a href="tel:+33680758335" class="het-btn-ghost">Appeler le 06 80 75 83 35</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- scroll hint -->
+  <div id="card-hint" class="het-card het-anim" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: hetFadeIn 1.2s ease 1.6s forwards;">
+    <svg width="22" height="34" viewBox="0 0 22 34" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="20" height="32" rx="10" stroke="#33302a" stroke-width="1.6" fill="rgba(251,250,247,0.35)"></rect>
+      <circle cx="11" cy="9" r="2.4" fill="#33302a" style="animation: hetWheel 1.8s ease-in-out infinite;"></circle>
+    </svg>
+    <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--het-acc, #96522c); text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9);">défiler pour entrer</span>
+  </div>
+
+  <!-- TRANSITION 1→2 — la constellation KPI, débris figés en plein air -->
+  <div id="card-kpi-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 236px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div style="padding: 18px 22px 16px;">
+      <p id="kpi-num-1" style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1;">25 ans</p>
+      <p style="margin: 0; font-size: 13.5px; color: #3d3831;">d'expérience à Rouen</p>
+      <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-1" style="height: 100%; width: 0%; background: var(--het-acc-b, #c97e4a); border-radius: 2px;"></div></div>
+    </div>
+  </div>
+  <div id="card-kpi-2" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 252px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div style="padding: 18px 22px 16px; display: flex; align-items: center; gap: 14px;">
+      <div style="flex: 1;">
+        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1.15;">Tous corps de métier</p>
+        <p style="margin: 0; font-size: 13.5px; color: #3d3831;">réunis sous un même toit</p>
+      </div>
+      <div id="kpi-bars-2" aria-hidden="true" style="display: flex; align-items: flex-end; gap: 3px; height: 34px;">
+        <span style="width: 5px; height: 14px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 22px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 18px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 28px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 34px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+      </div>
+    </div>
+  </div>
+  <div id="card-kpi-3" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 236px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div style="padding: 18px 22px 16px; display: flex; align-items: center; gap: 14px;">
+      <div style="flex: 1;">
+        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1.15;">Délais &amp; budget</p>
+        <p style="margin: 0; font-size: 13.5px; color: #3d3831;">respectés</p>
+      </div>
+      <div aria-hidden="true" style="position: relative; width: 46px; height: 46px;">
+        <svg width="46" height="46" viewBox="0 0 46 46" style="transform: rotate(-90deg);">
+          <circle cx="23" cy="23" r="19" fill="none" stroke="rgba(38,32,24,0.1)" stroke-width="4"></circle>
+          <circle id="kpi-ring-3" cx="23" cy="23" r="19" fill="none" stroke="#c97e4a" style="stroke: var(--het-acc-b, #c97e4a);" stroke-width="4" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"></circle>
+        </svg>
+        <span id="kpi-num-3" style="position: absolute; inset: 0; display: grid; place-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; font-weight: 600; color: var(--het-acc, #96522c);">0%</span>
+      </div>
+    </div>
+  </div>
+  <div id="card-kpi-4" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 220px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div style="padding: 18px 22px 16px;">
+      <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: #7ba03f; line-height: 1;">Éco</p>
+      <p style="margin: 0; font-size: 13.5px; color: #3d3831;">démarche responsable</p>
+      <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-4" style="height: 100%; width: 0%; background: linear-gradient(90deg, #85a844, #2f5540); border-radius: 2px;"></div></div>
+    </div>
+  </div>
+  <div id="card-trust" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; border-radius: 999px; box-shadow: 0 18px 40px -18px rgba(38, 32, 24, 0.3); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <p style="margin: 0; padding: 11px 26px; max-width: 86vw; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #6e675c; text-align: center; line-height: 1.7;">Ils nous ont fait confiance — Stéphane Plaza Immobilier · Allianz · Agence Evvi · Boulangerie Yvonne · Tilt Vintage</p>
+  </div>
+
+  <!-- SCENE 2 · ouvrir — GROS ŒUVRE -->
+  <div id="card-svc-ouvrir" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-svc-pad" style="padding: 28px 30px 26px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">02</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Gros œuvre &amp; extension</span>
+      </div>
+      <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">On ouvre les volumes.</h2>
+      <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #3d3831;">Maçonnerie, charpente, ouverture de murs porteurs, agrandissement. La structure de vos projets, maîtrisée de bout en bout.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+        <span class="het-tag">Murs porteurs</span>
+        <span class="het-tag">Extension</span>
+        <span class="het-tag">Maçonnerie</span>
+      </div>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/gros-oeuvre-extension" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+    </div>
+  </div>
+
+  <!-- SCENE 3 · eclairer — RÉNOVATION INTÉRIEURE -->
+  <div id="card-svc-eclairer" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-svc-pad" style="padding: 28px 30px 26px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">01</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Rénovation intérieure</span>
+      </div>
+      <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">La lumière entre.</h2>
+      <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #3d3831;">Cuisines, salles de bain, appartements et maisons entièrement repensés. Un intérieur qui vous ressemble, du plan aux finitions.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+        <span class="het-tag">Verrières</span>
+        <span class="het-tag">Menuiseries</span>
+        <span class="het-tag">Finitions</span>
+      </div>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-interieure" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+    </div>
+  </div>
+
+  <!-- SCENE 4 · isoler — RÉNOVATION ÉNERGÉTIQUE -->
+  <div id="card-svc-isoler" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(480px, 42vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-svc-pad" style="padding: 28px 30px 26px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">04</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Rénovation énergétique</span>
+      </div>
+      <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">Votre confort, isolé.</h2>
+      <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #3d3831;">Isolation, sortie de passoire thermique, accompagnement aux aides. L'« Eco » de Home Eco Travaux, ce n'est pas qu'un nom.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+        <span class="het-tag">Isolation thermique</span>
+        <span class="het-tag">Isolation phonique</span>
+        <span class="het-tag">Passoire thermique</span>
+        <span class="het-tag">Menuiseries performantes</span>
+        <span class="het-tag">Aides financières</span>
+      </div>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-energetique" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">Découvrir la rénovation énergétique →</a>
+    </div>
+  </div>
+
+  <!-- SCENE 5 · reveler — PRO & COMMERCES -->
+  <div id="card-svc-reveler" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-svc-pad" style="padding: 28px 30px 26px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">03</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Aménagement pro &amp; commerces</span>
+      </div>
+      <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">Votre image, révélée.</h2>
+      <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #3d3831;">Bureaux, boutiques, devantures et mises aux normes. Nous transformons les espaces pour refléter l'esprit de votre entreprise.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+        <span class="het-tag">Devantures</span>
+        <span class="het-tag">Bureaux</span>
+        <span class="het-tag">Mise aux normes</span>
+      </div>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/amenagement-pro-commerces" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+    </div>
+  </div>
+
+  <!-- SCENE 6 · livre — Beat 1 : témoignage -->
+  <div id="card-temoignage" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(620px, 52vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-tem-pad" style="padding: 30px 34px 28px;">
+      <p style="margin: 0 0 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Témoignages <span style="color: var(--het-acc-b, #c97e4a);">★★★★★</span> 5/5 · Avis clients</p>
+      <blockquote style="margin: 0 0 16px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 500; font-size: clamp(20px, 1.8vw, 25px); line-height: 1.35; color: #26221c;">« C'était fluide, simple, ça m'a dégagé beaucoup de temps. Le respect des délais, le respect des budgets&nbsp;: il n'y avait pas de surprise. »</blockquote>
+      <p style="margin: 0 0 2px; font-size: 14px; font-weight: 600; color: #26221c;">— Jean-Baptiste Leroy, dirigeant de l'agence Evvi</p>
+      <p style="margin: 0 0 16px; font-size: 13px; color: #6e675c;">Rénovation d'un plateau de bureaux de 350 m²</p>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/temoignages" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">Voir tous les témoignages →</a>
+    </div>
+  </div>
+
+  <!-- Beat 2 : constellation portfolio -->
+  <div id="card-port-head" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(640px, 60vw); text-align: center; will-change: transform, opacity; transform-origin: 50% 50%;">
+    <h2 style="margin: 0 0 8px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(28px, 2.6vw, 40px); line-height: 1.12; color: #26221c; text-shadow: 0 2px 26px rgba(242, 239, 233, 0.85);">Chaque chantier raconte une transformation</h2>
+    <p style="margin: 0 0 10px; font-size: 15px; color: #3d3831; text-shadow: 0 1px 18px rgba(242, 239, 233, 0.9);">Quelques projets menés à Rouen, en Normandie et au-delà.</p>
+    <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/realisations" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9); transition: letter-spacing 0.3s;">Toutes nos réalisations →</a>
+  </div>
+
+  <div id="card-proj-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-proj-media" style="position: relative; height: 140px;">
+      <img src="assets/portfolio/thiouville.jpg" alt="Château de Thiouville — écuries rénovées" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PATRIMOINE</span>
+    </div>
+    <div style="padding: 14px 16px 14px;">
+      <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Château de Thiouville — les écuries transformées</p>
+      <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: #6e675c;">Thiouville</p>
+    </div>
+  </div>
+  <div id="card-proj-2" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-proj-media" style="position: relative; height: 140px;">
+      <img src="assets/portfolio/plaza.jpg" alt="Agence Stéphane Plaza Immobilier à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PROFESSIONNEL</span>
+    </div>
+    <div style="padding: 14px 16px 14px;">
+      <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Agence Stéphane Plaza Immobilier — Rouen Rive Droite</p>
+      <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: #6e675c;">Rouen</p>
+    </div>
+  </div>
+  <div id="card-proj-3" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-proj-media" style="position: relative; height: 140px;">
+      <img src="assets/portfolio/yvonne.jpg" alt="Boulangerie Yvonne à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">COMMERCE</span>
+    </div>
+    <div style="padding: 14px 16px 14px;">
+      <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Boulangerie Yvonne — d'une boutique SNCF à un commerce aux normes</p>
+      <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: #6e675c;">Rouen</p>
+    </div>
+  </div>
+  <div id="card-proj-4" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <div class="het-proj-media" style="position: relative; height: 140px;">
+      <img src="assets/portfolio/cuisine.jpg" alt="Cuisine sur-mesure" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PARTICULIER</span>
+    </div>
+    <div style="padding: 14px 16px 14px;">
+      <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Cuisine sur-mesure — reflet du style de la maison</p>
+      <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: #6e675c;">Agglomération de Rouen</p>
+    </div>
+  </div>
+
+  <!-- footer strip -->
+  <div id="card-footer" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; max-width: 90vw; border-radius: 22px; box-shadow: 0 16px 36px -16px rgba(38, 32, 24, 0.3); will-change: transform, opacity; transform-origin: 50% 50%;">
+    <p style="margin: 0; padding: 11px 26px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.04em; color: #6e675c; text-align: center; line-height: 1.7;">© 2026 Home Eco Travaux — Rouen &amp; Normandie (76) · <a href="tel:+33680758335" style="color: var(--het-acc, #96522c); text-decoration: none;">06 80 75 83 35</a> · <a href="tel:+33981642555" style="color: var(--het-acc, #96522c); text-decoration: none;">09 81 64 25 55</a> · <a href="mailto:contact@home-eco-travaux.com" style="color: var(--het-acc, #96522c); text-decoration: none;">contact@home-eco-travaux.com</a> · <a href="https://www.instagram.com/home_eco_travaux" style="color: var(--het-acc, #96522c); text-decoration: none;">Instagram</a> · <a href="https://home-eco-travaux-site.vercel.app/mentions-legales" style="color: var(--het-acc, #96522c); text-decoration: none;">Mentions légales</a> · <a href="https://home-eco-travaux-site.vercel.app/politique-confidentialite" style="color: var(--het-acc, #96522c); text-decoration: none;">Confidentialité</a></p>
+  </div>
+</div>
+
+<!-- ===================== CINEMATIC MENU BAR ===================== -->
+<nav id="het-menu" class="het-anim" aria-label="Navigation principale" style="position: fixed; top: 16px; left: 50%; transform: translate(-50%, 0); z-index: 20; display: flex; flex-wrap: nowrap; align-items: center; gap: 18px; max-width: calc(100vw - 24px); padding: 12px 22px 14px; border-radius: 999px; background: rgba(242, 239, 233, 0.5); border: 1px solid rgba(228, 222, 207, 0.7); backdrop-filter: blur(16px) saturate(1.35); -webkit-backdrop-filter: blur(16px) saturate(1.35); box-shadow: 0 14px 40px -14px rgba(38, 32, 24, 0.3); transition: padding 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.6s, top 0.6s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.6s; animation: hetMenuIn 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.05s backwards;">
+  <a href="/" class="het-anim" style="display: flex; align-items: center; gap: 10px; text-decoration: none; animation: hetNavIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s backwards;">
+    <svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#2F5540"></circle><path d="M30 52 50 34l20 18v20H30z" fill="#F2EFE9"></path><path d="M60 40c8-6 14-4 14-4s-1 9-7 12-11-3-7-8z" fill="#85A844"></path></svg>
+    <span style="display: flex; flex-direction: column; line-height: 1.15;">
+      <span style="font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 15.5px; color: #26221c; white-space: nowrap;">Home Eco Travaux</span>
+      <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 7.5px; letter-spacing: 0.22em; color: #6e675c; white-space: nowrap;">RÉNOVATION · ROUEN</span>
+    </span>
+  </a>
+  <div class="het-menu-links" style="display: flex; align-items: center; gap: 2px;">
+    <a class="het-navlink het-anim" href="https://home-eco-travaux-site.vercel.app/a-propos" style="padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.55s backwards;">À propos</a>
+    <a class="het-navlink het-anim" href="https://home-eco-travaux-site.vercel.app/realisations" style="padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.61s backwards;">Réalisations</a>
+    <a class="het-navlink het-anim" href="https://home-eco-travaux-site.vercel.app/temoignages" style="padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.67s backwards;">Témoignages</a>
+    <a class="het-navlink het-anim" href="https://home-eco-travaux-site.vercel.app/conseils" style="padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.73s backwards;">Conseils</a>
+    <a class="het-navlink het-anim" href="https://home-eco-travaux-site.vercel.app/zones-intervention" style="padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.79s backwards;">Zones</a>
+  </div>
+  <div style="display: flex; align-items: center; gap: 14px;">
+    <a href="tel:+33680758335" class="het-menu-tel het-anim" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #26221c; text-decoration: none; white-space: nowrap; animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.86s backwards;">06 80 75 83 35</a>
+    <a id="het-menu-devis" href="#devis" data-magnetic="true" class="het-cta-menu het-anim" style="animation: hetNavIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.94s backwards;">Devis gratuit</a>
+  </div>
+  <!-- the film's playhead: the menu IS the progress bar -->
+  <div aria-hidden="true" style="position: absolute; left: 22px; right: 22px; bottom: 4px; height: 2px; border-radius: 2px; background: rgba(38, 32, 24, 0.08); overflow: visible;">
+    <div id="het-playhead" style="height: 100%; border-radius: 2px; background: var(--het-acc-b, #c97e4a); transform: scaleX(0); transform-origin: left center;"></div>
+    <span id="het-tick-0" style="position: absolute; left: 0%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+    <span id="het-tick-1" style="position: absolute; left: 22%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+    <span id="het-tick-2" style="position: absolute; left: 36%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+    <span id="het-tick-3" style="position: absolute; left: 52%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+    <span id="het-tick-4" style="position: absolute; left: 68%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+    <span id="het-tick-5" style="position: absolute; left: 80%; top: -1.5px; width: 5px; height: 5px; border-radius: 999px; background: rgba(38, 32, 24, 0.18); transition: background 0.4s, box-shadow 0.4s;"></span>
+  </div>
+</nav>
+
+<!-- ===================== PROGRESS RAIL (right edge) ===================== -->
+<div id="het-rail" class="het-anim" aria-label="Progression du film" style="position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 16px; align-items: flex-end; animation: hetFadeIn 1s ease 1.5s backwards;">
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">La naissance</span>
+    <span id="het-dot-0" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">Ouvrir</span>
+    <span id="het-dot-1" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">Éclairer</span>
+    <span id="het-dot-2" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">Isoler</span>
+    <span id="het-dot-3" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">Révéler</span>
+    <span id="het-dot-4" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+  <button type="button" class="het-dot-row" style="display: flex; align-items: center; gap: 10px; background: none; border: none; padding: 4px; cursor: pointer;">
+    <span class="het-dot-tip" style="padding: 5px 12px; border-radius: 999px; background: rgba(242, 239, 233, 0.7); border: 1px solid rgba(228, 222, 207, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.1em; color: #26221c; white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none;">Livré</span>
+    <span id="het-dot-5" style="width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid rgba(38, 32, 24, 0.4); background: rgba(251, 250, 247, 0.5); transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;"></span>
+  </button>
+</div>
+
+<script src="assets/vendor/three.min.js"></script>
+<script src="glass-engine.js?v=1"></script>
 <script>
-mountScrollWorld(document.getElementById('monde'), {
-  brand: { name: 'Home Eco Travaux', href: '#' },
-  cta: { label: 'Demander un devis', href: 'mailto:contact@home-eco-travaux.com' },
-  hint: 'défiler pour entrer',
-  diveScroll: 1.35,
-  connScroll: 0.85,
-  crossfade: 0.10,
-  sections: [
-    {
-      id: 'chantier', label: 'La naissance',
-      still: 'assets/chantier.webp?v=magic', clip: 'assets/vid/leg-1.mp4?v=magic', clipMobile: 'assets/vid/leg-1-m.mp4?v=magic',
-      scroll: 1.7, linger: 0.35, accent: '#274733',
-      eyebrow: 'Rouen · 25 ans de chantiers',
-      title: 'Votre projet commence ici.',
-      body: 'Depuis 25 ans, Home Eco Travaux transforme maisons, appartements et locaux professionnels en Normandie — un seul interlocuteur, tous les corps de métier.',
-      tags: ['25 ans', 'Tous corps de métier', 'Devis gratuit'],
-    },
-    {
-      id: 'ouvrir', label: 'Ouvrir',
-      still: 'assets/ouvrir.webp?v=magic', clip: 'assets/vid/leg-2.mp4?v=magic', clipMobile: 'assets/vid/leg-2-m.mp4?v=magic',
-      accent: '#274733',
-      eyebrow: 'Gros œuvre & extension',
-      title: 'On ouvre les volumes.',
-      body: 'Murs porteurs ouverts, poutres posées, extensions structurées : nous agrandissons l’espace en toute sécurité, dans les règles de l’art.',
-      tags: ['Murs porteurs', 'Extension', 'Maçonnerie'],
-    },
-    {
-      id: 'eclairer', label: 'Éclairer',
-      still: 'assets/eclairer.webp?v=magic', clip: 'assets/vid/leg-3.mp4?v=magic', clipMobile: 'assets/vid/leg-3-m.mp4?v=magic',
-      scroll: 1.5, linger: 0.4, accent: '#274733',
-      eyebrow: 'Verre & lumière',
-      title: 'La lumière entre.',
-      body: 'Verrières, murs-rideaux posés à l’araignée-ventouse, menuiseries : nos prouesses techniques inondent vos pièces de jour.',
-      tags: ['Verrières', 'Menuiseries', 'Prouesse technique'],
-    },
-    {
-      id: 'isoler', label: 'Isoler',
-      still: 'assets/isoler.webp?v=magic', clip: 'assets/vid/leg-4.mp4?v=magic', clipMobile: 'assets/vid/leg-4-m.mp4?v=magic',
-      accent: '#64842f',
-      eyebrow: 'Rénovation énergétique',
-      title: 'Votre confort, isolé.',
-      body: 'Isolation biosourcée, sortie de passoire thermique, accompagnement aux aides : l’« éco » de notre nom est un engagement.',
-      tags: ['Isolation', 'DPE', 'Matériaux durables'],
-    },
-    {
-      id: 'reveler', label: 'Révéler',
-      still: 'assets/reveler.webp?v=magic', clip: 'assets/vid/leg-5.mp4?v=magic', clipMobile: 'assets/vid/leg-5-m.mp4?v=magic',
-      accent: '#274733',
-      eyebrow: 'Pro & commerces',
-      title: 'Votre image, révélée.',
-      body: 'Boutiques, bureaux, devantures : nous transformons les espaces pour refléter l’esprit de votre entreprise — Stéphane Plaza, Allianz, boulangerie Valentin…',
-      tags: ['Devantures', 'Bureaux', 'Mise aux normes'],
-    },
-    {
-      id: 'livre', label: 'Livré',
-      still: 'assets/livre.webp?v=magic', clip: 'assets/vid/leg-6.mp4?v=magic', clipMobile: 'assets/vid/leg-6-m.mp4?v=magic',
-      scroll: 1.9, linger: 0.45, accent: '#274733',
-      eyebrow: 'Livraison',
-      title: 'Chez vous, enfin.',
-      body: 'Délais tenus, budget respecté, finitions soignées : il ne reste qu’à vivre. Parlons de votre projet.',
-      cta: {
-        primary: { label: 'Demander un devis gratuit', href: 'mailto:contact@home-eco-travaux.com' },
-        secondary: { label: '06 80 75 83 35', href: 'tel:+33680758335' },
+/* Boot « La Métamorphose » — port vanilla du composant claude.design
+   (valeurs canvas validées : refraction 0.75 · frost 1.05 · scroll 1100vh).
+   La vidéo (6 legs + posters) et ses réglages de dwell sont ceux de la
+   landing v7 — le film n'est pas touché, seule la couche UI change. */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var M = window.matchMedia('(hover: none) and (pointer: coarse)').matches || window.matchMedia('(max-width: 860px)').matches;
+  var SCENE_NAMES = ['chantier', 'ouvrir', 'eclairer', 'isoler', 'reveler', 'livre'];
+  var LINGERS = [0.35, 0, 0.4, 0, 0, 0.45];          // dwell caméra v7 par scène
+  var SCENE_STARTS = [0, 0.22, 0.36, 0.52, 0.68, 0.80];
+  var R_MUL = 0.75, F_MUL = 1.05;                     // réglages verre validés au canvas
+
+  var api = null;
+  var activeScene = -1, condensed = null, finaleShown = null, kpiWasIn = false;
+  var accD = '', accB = '';
+  // Accents échantillonnés dans le film, fondus aux coutures : l'UI se
+  // ré-éclaire avec ce que la caméra montre. chantier: bleu craie · ouvrir:
+  // terracotta · eclairer: flare doré · isoler: paille · reveler: bleu crépuscule · livre: miel.
+  var ACC = [['#3e6b8d', '#6fa3c9'], ['#96522c', '#c97e4a'], ['#8f5f10', '#d29a2b'], ['#7d5c22', '#b98f3d'], ['#4a5d80', '#7488ad'], ['#915d1d', '#cf9440']];
+  function hexLerp(a, b, t) {
+    if (t <= 0) return a; if (t >= 1) return b;
+    var pa = [1, 3, 5].map(function (i) { return parseInt(a.slice(i, i + 2), 16); });
+    var pb = [1, 3, 5].map(function (i) { return parseInt(b.slice(i, i + 2), 16); });
+    return '#' + pa.map(function (v, i) { return Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, '0'); }).join('');
+  }
+
+  function onFrame(p) {
+    var ph = $('het-playhead');
+    if (ph) ph.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+
+    var si = 0, i;
+    for (i = SCENE_STARTS.length - 1; i >= 0; i--) { if (p >= SCENE_STARTS[i]) { si = i; break; } }
+    var aNext = ACC[si], bt = 0;
+    if (si < SCENE_STARTS.length - 1) {
+      var nb = SCENE_STARTS[si + 1], bw = 0.035;
+      if (p > nb - bw) { aNext = ACC[si + 1]; bt = (p - (nb - bw)) / bw; }
+    }
+    var nAccD = hexLerp(ACC[si][0], aNext[0], bt);
+    var nAccB = hexLerp(ACC[si][1], aNext[1], bt);
+    if (nAccD !== accD) { accD = nAccD; document.documentElement.style.setProperty('--het-acc', nAccD); }
+    if (nAccB !== accB) { accB = nAccB; document.documentElement.style.setProperty('--het-acc-b', nAccB); }
+
+    // KPI count-up + jauges, scrubbés avec le scroll (réversibles)
+    var inKpi = p > 0.14 && p < 0.26;
+    if (inKpi || kpiWasIn) {
+      kpiWasIn = inKpi;
+      var t = Math.max(0, Math.min(1, (p - 0.152) / 0.045));
+      var e = 1 - Math.pow(1 - t, 3);
+      var n1 = $('kpi-num-1'), b1 = $('kpi-bar-1'), bars = $('kpi-bars-2'),
+        r3 = $('kpi-ring-3'), n3 = $('kpi-num-3'), b4 = $('kpi-bar-4');
+      if (n1) n1.textContent = Math.round(25 * e) + ' ans';
+      if (b1) b1.style.width = (e * 100).toFixed(1) + '%';
+      if (bars) {
+        var kids = bars.children;
+        for (i = 0; i < kids.length; i++) {
+          var s = Math.max(0, Math.min(1, e * 2.4 - i * 0.35));
+          kids[i].style.transform = 'scaleY(' + s.toFixed(3) + ')';
+        }
+      }
+      if (r3) r3.style.strokeDashoffset = (119.4 * (1 - e)).toFixed(1);
+      if (n3) n3.textContent = Math.round(100 * e) + '%';
+      if (b4) b4.style.width = (e * 100).toFixed(1) + '%';
+    }
+
+    var scene = 0;
+    for (i = SCENE_STARTS.length - 1; i >= 0; i--) { if (p >= SCENE_STARTS[i] - 0.001) { scene = i; break; } }
+    if (scene !== activeScene) {
+      activeScene = scene;
+      for (i = 0; i < 6; i++) {
+        var tick = $('het-tick-' + i), dot = $('het-dot-' + i);
+        var on = i === scene, passed = i < scene;
+        if (tick) {
+          tick.style.background = on ? 'var(--het-acc-b, #c97e4a)' : (passed ? 'color-mix(in srgb, var(--het-acc-b, #c97e4a) 55%, transparent)' : 'rgba(38,32,24,0.18)');
+          tick.style.boxShadow = on ? '0 0 8px color-mix(in srgb, var(--het-acc-b, #c97e4a) 85%, transparent)' : 'none';
+        }
+        if (dot) {
+          dot.style.background = on ? 'var(--het-acc-b, #c97e4a)' : 'rgba(251,250,247,0.5)';
+          dot.style.borderColor = on ? 'var(--het-acc-b, #c97e4a)' : 'rgba(38,32,24,0.4)';
+          dot.style.boxShadow = on ? '0 0 10px color-mix(in srgb, var(--het-acc-b, #c97e4a) 80%, transparent)' : 'none';
+        }
+      }
+    }
+
+    var cond = p > 0.012;
+    if (cond !== condensed) {
+      condensed = cond;
+      var menu = $('het-menu');
+      if (menu) {
+        menu.style.padding = cond ? '7px 18px 10px' : '12px 22px 14px';
+        menu.style.top = cond ? '10px' : '16px';
+        menu.style.background = cond ? 'rgba(242,239,233,0.68)' : 'rgba(242,239,233,0.5)';
+        menu.style.backdropFilter = cond ? 'blur(22px) saturate(1.4)' : 'blur(16px) saturate(1.35)';
+        menu.style.webkitBackdropFilter = menu.style.backdropFilter;
+      }
+    }
+
+    // le lead de la carte devis n'apparaît que sur son vol retour (finale)
+    var finale = p > 0.5;
+    if (finale !== finaleShown) {
+      finaleShown = finale;
+      var lead = $('devis-lead');
+      if (lead) lead.style.display = finale ? 'block' : 'none';
+      if (api) api.remeasure();   // la hauteur de la carte change
+    }
+  }
+
+  api = window.HETGlass.mount({
+    canvas: $('het-canvas'),
+    track: $('het-track'),
+    perspectiveLayer: $('het-layer'),
+    magnetRoot: document,
+    scrollVh: 1100,
+    forceTierC: !window.THREE,
+    legs: SCENE_NAMES.map(function (n, i) {
+      return {
+        src: 'assets/vid/leg-' + (i + 1) + '.mp4?v=magic',
+        srcMobile: 'assets/vid/leg-' + (i + 1) + '-m.mp4?v=magic',
+        poster: 'assets/' + n + '.webp?v=magic',
+        linger: LINGERS[i],
+      };
+    }),
+    legBounds: [0, 0.22, 0.36, 0.52, 0.68, 0.80, 1.0001],
+    onFrame: onFrame,
+  });
+
+  /* ---------- cartes (Tier A uniquement) ---------- */
+  if (api.tier !== 'C') {
+    var cards = [];
+    var reg = function (id, def) {
+      var el = $(id); if (!el) return null;
+      def.el = el;
+      if (def.refr == null) def.refr = 1;
+      if (def.frost == null) def.frost = 0.55;
+      def.refr *= R_MUL; def.frost = Math.min(1, def.frost * F_MUL);
+      var c = api.registerCard(def);
+      cards.push(c);
+      return c;
+    };
+    var W = function (el) { return el.offsetWidth; }, H = function (el) { return el.offsetHeight; };
+
+    // SCENE 1 — hero ancré à l'UI (scrim bas-gauche), pas au monde
+    var heroEl = $('card-hero');
+    reg('card-hero', {
+      glass: false, ranges: M ? [[0, 0.088]] : [[0, 0.148]], exitW: M ? 0.3 : 0.22, depth: 0.5, float: 0.35, loadDelay: 0.2, pin: 0,
+      anchor: function (vw, vh) { return [Math.max(M ? 18 : 46, vw * 0.035), vh - H(heroEl) - (M ? 64 : 44)]; },
+    });
+    // La carte devis arrive AVEC le titre principal (loadDelay aligné sur la
+    // révélation du H1). Sur téléphone l'écran ne tient pas les deux à la
+    // fois : elle prend le relais dès le premier geste de scroll (p 0.05).
+    var devisEl = $('card-devis');
+    reg('card-devis', {
+      ranges: M ? [[0.05, 0.158], [0.925, 1.03]] : [[0, 0.152], [0.925, 1.03]],
+      enterW: 0.24, exitW: 0.16, depth: 0.9, pin: 0.18,
+      frost: 0.72, refr: 1, loadDelay: 0.25, focusable: true, tiltMax: 5, spinIn: true, float: 1.25,
+      anchor: function (vw, vh, ri) {
+        if (M) return [(vw - W(devisEl)) / 2, Math.max(76, Math.min(vh * 0.1, vh - H(devisEl) - 24))];
+        return ri === 0
+          ? [vw - W(devisEl) - vw * 0.055, Math.max(100, Math.min(vh * 0.13, vh - H(devisEl) - 90))]
+          : [(vw - W(devisEl)) / 2, Math.max(104, Math.min(vh * 0.12, vh - H(devisEl) - 70))];
       },
-    },
-  ],
-  connectors: [],
-});
+    });
+    var hintEl = $('card-hint');
+    reg('card-hint', {
+      glass: false, ranges: [[0, 0.055]], exitW: 0.5, depth: 0.3, float: 0.5, loadDelay: 1.4, pin: 0,
+      anchor: function (vw, vh) { return [(vw - W(hintEl)) / 2, vh - 88]; },
+    });
+
+    // Constellation KPI — débris figés en l'air, profondeurs étagées
+    var kpiPos = [[0.1, 0.27, 0.5], [0.3, 0.6, 1.15], [0.53, 0.23, 0.8], [0.71, 0.57, 1.4]];
+    kpiPos.forEach(function (k, i) {
+      var el = $('card-kpi-' + (i + 1));
+      reg('card-kpi-' + (i + 1), {
+        ranges: [[0.149 + i * 0.006, 0.235 + i * 0.004]], enterW: 0.22, exitW: 0.18,
+        depth: k[2], frost: 0.5, radius: 20, float: 1.3, tiltMax: 7,
+        anchor: function (vw, vh) {
+          if (M) return [i % 2 ? vw - W(el) - 14 : 14, vh * 0.14 + i * vh * 0.17];
+          return [vw * k[0], vh * k[1]];
+        },
+      });
+    });
+    var trustEl = $('card-trust');
+    reg('card-trust', {
+      ranges: [[0.176, 0.242]], enterW: 0.25, exitW: 0.2, depth: 0.6, frost: 0.68, radius: 999, float: 0.5, pin: 0,
+      anchor: function (vw, vh) { return [(vw - W(trustEl)) / 2, vh - H(trustEl) - (M ? 18 : 24)]; },
+    });
+
+    // Cartes services — chacune dans la scène du film qui la montre
+    var svc = [
+      ['card-svc-ouvrir', [0.226, 0.358], 'left', 1],
+      ['card-svc-eclairer', [0.366, 0.518], 'right', 1.35], // scène du flare caustique
+      ['card-svc-isoler', [0.526, 0.678], 'left', 1],
+      ['card-svc-reveler', [0.686, 0.798], 'right', 1],
+    ];
+    svc.forEach(function (def) {
+      var id = def[0], range = def[1], side = def[2], refr = def[3];
+      var el = $(id);
+      reg(id, {
+        ranges: [range], enterW: 0.16, exitW: 0.14, depth: 0.85, frost: 0.58, refr: refr,
+        anchor: function (vw, vh) {
+          if (M) return [(vw - W(el)) / 2, vh - H(el) - 76];
+          return [
+            side === 'left' ? vw * 0.07 : vw - W(el) - vw * 0.07,
+            Math.max(128, Math.min(vh * 0.24, vh - H(el) - vh * 0.14)),
+          ];
+        },
+      });
+    });
+
+    // SCENE 6 — trois temps
+    var temEl = $('card-temoignage');
+    reg('card-temoignage', {
+      ranges: [[0.802, 0.86]], enterW: 0.2, exitW: 0.16, depth: 0.8, frost: 0.6, pin: 0.5,
+      anchor: function (vw, vh) {
+        if (M) return [(vw - W(temEl)) / 2, Math.max(84, vh - H(temEl) - 90)];
+        return [vw * 0.09, Math.max(128, Math.min(vh * 0.24, vh - H(temEl) - vh * 0.16))];
+      },
+    });
+    var phEl = $('card-port-head');
+    reg('card-port-head', {
+      glass: false, ranges: [[0.856, 0.93]], enterW: 0.16, exitW: 0.14, depth: 0.4, float: 0.4, pin: 0.25,
+      anchor: function (vw, vh) { return [(vw - W(phEl)) / 2, Math.max(M ? 92 : 118, vh * 0.11)]; },
+    });
+    var projPos = [[0.055, 0.36, 0.6], [0.29, 0.52, 1.2], [0.525, 0.33, 0.85], [0.755, 0.5, 1.45]];
+    projPos.forEach(function (k, i) {
+      var el = $('card-proj-' + (i + 1));
+      reg('card-proj-' + (i + 1), {
+        ranges: [[0.858 + i * 0.004, 0.926 + i * 0.003]], enterW: 0.2, exitW: 0.16,
+        depth: k[2], frost: 0.45, radius: 20, float: 1.1, tiltMax: 7,
+        anchor: function (vw, vh) {
+          var cw = W(el) || 264, gap = M ? 12 : 16;
+          if (M) {
+            var col = i % 2, row = (i - col) / 2;
+            return [(vw - (2 * cw + gap)) / 2 + col * (cw + gap), vh * 0.2 + row * (H(el) + gap + 10)];
+          }
+          if (vw < cw * 4 + 140) {
+            var cols = Math.max(1, Math.min(4, Math.floor((vw - 40) / (cw + 16))));
+            var gw = cols * cw + (cols - 1) * 16;
+            var c2 = i % cols, r2 = Math.floor(i / cols);
+            return [(vw - gw) / 2 + c2 * (cw + 16), vh * 0.3 + r2 * (H(el) + 22) - (r2 ? vh * 0.02 : 0)];
+          }
+          return [vw * k[0], vh * k[1]];
+        },
+      });
+    });
+    var footEl = $('card-footer');
+    reg('card-footer', {
+      ranges: [[0.958, 1.03]], enterW: 0.3, exitW: 0.01, depth: 0.4, frost: 0.7, radius: 22, float: 0.3, pin: 0,
+      anchor: function (vw, vh) { return [(vw - W(footEl)) / 2, vh - H(footEl) - 16]; },
+    });
+
+    // focus mode : le film s'assombrit + défocalise pendant la saisie
+    devisEl.addEventListener('focusin', function () { api.setFocus(true); });
+    devisEl.addEventListener('focusout', function () { api.setFocus(false); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { api.remeasure(); });
+    setTimeout(function () { api.remeasure(); }, 400);
+    window.addEventListener('load', function () { api.remeasure(); });
+  }
+
+  /* ---------- chips type de projet ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.het-chip'), function (ch) {
+    ch.addEventListener('click', function () {
+      var on = ch.classList.toggle('is-on');
+      ch.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  });
+
+  /* ---------- formulaire devis : mailto pré-rempli + état succès ---------- */
+  $('devis-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('devis-nom').value.trim();
+    var contact = $('devis-contact').value.trim();
+    var msg = $('devis-projet').value.trim();
+    var types = Array.prototype.map.call(document.querySelectorAll('.het-chip.is-on'), function (b) { return b.textContent.trim(); });
+    var body = 'Nom : ' + name + '\nContact : ' + contact +
+      (types.length ? '\nType de projet : ' + types.join(', ') : '') +
+      (msg ? '\nProjet : ' + msg : '') +
+      '\n\n— Demande envoyée depuis la landing La Métamorphose';
+    $('devis-form').style.display = 'none';
+    $('devis-success').style.display = 'block';
+    if (api) api.remeasure();
+    window.location.href = 'mailto:contact@home-eco-travaux.com?subject=' +
+      encodeURIComponent('Demande de devis gratuit — ' + (name || 'nouveau projet')) +
+      '&body=' + encodeURIComponent(body);
+  });
+
+  /* ---------- rail : saut aux points de dwell ---------- */
+  var DWELL = [0.04, 0.28, 0.43, 0.6, 0.735, 0.84];
+  Array.prototype.forEach.call(document.querySelectorAll('.het-dot-row'), function (btn, i) {
+    btn.addEventListener('click', function () { if (api) api.scrollToP(DWELL[i]); });
+  });
+
+  /* ---------- CTA menu : rejoint la carte devis la plus proche ---------- */
+  $('het-menu-devis').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (!api) return;
+    var tr = $('het-track');
+    var max = Math.max(1, (tr.offsetHeight || (document.scrollingElement || document.documentElement).scrollHeight) - window.innerHeight);
+    var p = (window.scrollY || 0) / max;
+    api.scrollToP((M || p > 0.5) ? 0.965 : 0.02);
+    setTimeout(function () { var n = $('devis-nom'); if (n) n.focus({ preventScroll: true }); }, 900);
+  });
+})();
 </script>
 </body>
 </html>
