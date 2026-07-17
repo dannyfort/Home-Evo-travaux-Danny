@@ -4,7 +4,7 @@ Landing scroll-scrubbée pour Home Eco Travaux (entreprise générale de rénova
 
 ## Direction artistique
 
-**La DA de référence est la v3 photoréaliste « La construction magique »** (commit `f113a0e`) : imagerie CGI high-end façon vrai tournage, brief complet dans [`../da/brief.md`](../da/brief.md). **Toute itération future part de cette version.**
+**La DA de référence est la photoréaliste « La construction magique »** — depuis juil. 2026 en **v4 « boulangerie »** (storyboard `../da/slides-v4/` : naissance → boulangerie → baies → isolation → devanture → livré, fil rouge commerce artisan) : imagerie CGI high-end façon vrai tournage, brief dans [`../da/brief.md`](../da/brief.md). **Toute itération future part de cette version.**
 
 L'ancienne DA diorama argile façon Pixar est archivée — non maintenue, gardée en référence :
 
@@ -22,7 +22,7 @@ Le film lui-même (6 legs, posters, réglages de dwell) est inchangé — la vid
 - HTML statique + [`glass-engine.js`](glass-engine.js) : moteur du film + verre (WebGL, une passe backdrop → cible de réfraction partagée, cartes = slab WebGL + texte en vrai DOM slavé, springs, chorégraphie au scroll). Porte les durcissements de `scrub-engine.js` v7 : clips desktop/mobile, seeks coalescés, priming iOS, lingerEase par scène, garde resize barre d'URL, watchdog rAF, Tier C statique (`prefers-reduced-motion` / pas de WebGL).
 - [`scrub-engine.js`](scrub-engine.js) : ancien moteur v7 (cartons plats), conservé en référence — plus chargé par `index.html`.
 - Three.js r128 vendorisé ([`assets/vendor/three.min.js`](assets/vendor/three.min.js)) — pas de CDN en prod.
-- Visuels générés (Higgsfield — Seedance 2.0, DA photoréaliste frozen moment) puis upscalés en FHD 30 fps.
+- Film v4 : 6 legs de 7 s en **Seedance 2.0 Pro FHD natif (1080p 24 fps) via MCP Freepik** (plus d'étape d'upscale), chaîne architecture A (start frame = dernière frame réelle du leg précédent), **ponts de raccord** de 10 frames bakés en tête des legs 2-6 → seams pixel-locked (RMSE < 3). Masters et prompts dans `../rushes-v4/`.
 
 ## Structure
 
@@ -33,8 +33,8 @@ scrub-engine.js            ancien moteur v7 — référence, non chargé
 assets/vendor/three.min.js Three.js r128 auto-hébergé
 assets/*.webp              posters (fallback + poster vidéo)
 assets/portfolio/*.jpg     photos réalisations (covers het-site, optimisées 800px)
-assets/vid/leg-*.mp4       clips desktop 1920×1080 30fps
-assets/vid/leg-*-m.mp4     clips mobile 1280×720 (GOP court, décodage allégé)
+assets/vid/leg-*.mp4       clips desktop 1920×1080 24fps (crf21, GOP 4)
+assets/vid/leg-*-m.mp4     clips mobile 1280×720 (crf24, GOP 2, décodage allégé)
 ```
 
 ## Développement local
