@@ -318,11 +318,13 @@
       }).catch(() => { });
       return leg;
     });
-    // leg i covers p ∈ [bounds[i], bounds[i+1]] with crossfade at seams.
-    // XF + smoothstep calés sur la durée du fondu scrub-engine v7 (~200 px de
-    // scroll) : dissolution douce, jamais de cut sec ni de superposition qui traîne.
+    // leg i covers p ∈ [bounds[i], bounds[i+1]] — bascule SÈCHE aux coutures.
+    // XF = 0 (décision réalisateur 17/07) : les legs sont masterisés last frame
+    // = first frame au pixel près (morph optique en queue de leg), donc tout
+    // fondu moteur ne peut QUE dégrader — pendant la fenêtre de fondu, A joue
+    // encore sa fin (mouvement) sur B figé à sa frame 0 → double exposition.
     const bounds = cfg.legBounds;
-    const XF = 0.022;
+    const XF = 0;
     let externalVideoTex = null; // setVideoTexture() production swap
 
     function legIndex(p) {
@@ -753,7 +755,8 @@
       }
       seekTick();
 
-      // seam crossfade — smoothstep : dissolution douce, jamais de cut sec.
+      // coutures : XF = 0 → mixv reste 0, swap sec de texture au passage de
+      // frontière (invisible : la frame affichée est identique des deux côtés).
       // (Le faux handheld/zoom/parallaxe du design a été retiré : le film est
       // déjà tourné caméra épaule, on ne resample pas ses pixels.)
       let mixv = 0, iA = li, iB = Math.min(li + 1, legs.length - 1);
