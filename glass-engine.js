@@ -757,11 +757,22 @@
 
       // coutures : XF = 0 → mixv reste 0, swap sec de texture au passage de
       // frontière (invisible : la frame affichée est identique des deux côtés).
-      // (Le faux handheld/zoom/parallaxe du design a été retiré : le film est
-      // déjà tourné caméra épaule, on ne resample pas ses pixels.)
-      let mixv = 0, iA = li, iB = Math.min(li + 1, legs.length - 1);
-      const distToNext = bounds[li + 1] - p;
-      if (li < legs.length - 1 && distToNext < XF) { const m = 1 - distToNext / XF; mixv = m * m * (3 - 2 * m); }
+      // VERROU DE CONVERGENCE (17/07) : le lerp de seek retarde l'image affichée
+      // de plusieurs frames sur la cible ; swapper à l'instant du franchissement
+      // zappait la fin du leg sortant (le morph de couture) → petite saute.
+      // On ne swappe que lorsque le leg sortant a atteint sa frame de frontière
+      // (cur→1 en avant, cur→0 en arrière) — tenue < 100 ms, imperceptible.
+      // Un flick de plus d'une section snappe directement (pas de course à
+      // travers les legs intermédiaires).
+      let dl = (state.displayLeg == null) ? li : state.displayLeg;
+      if (dl !== li) {
+        const out = legs[dl];
+        const fwd = li > dl;
+        const converged = !out || !out.ready || (fwd ? out.cur >= 0.995 : out.cur <= 0.005);
+        if (converged || Math.abs(li - dl) > 1) dl = li;
+      }
+      state.displayLeg = dl;
+      let mixv = 0, iA = dl, iB = dl;
       const bu = backdropMat.uniforms;
       if (externalVideoTex) {
         bu.texA.value = externalVideoTex; bu.texB.value = externalVideoTex; bu.uMix.value = 0;
