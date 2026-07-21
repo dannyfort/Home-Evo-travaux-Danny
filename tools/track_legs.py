@@ -34,12 +34,13 @@ OUT = os.path.join(ROOT, 'assets', 'tracks-v7.json')
 DEBUG_DIR = os.environ.get('TRACK_DEBUG_DIR', '')
 
 # leg (1-based) -> [(nom, frame de seed, x, y)] en coordonnées vidéo normalisées
+# NB : legs 1-2 régénérés le 21/07 15:58 (119 et 155 frames) — seeds recalées.
 ANCHORS = {
-    1: [('kpi1', 168, 0.115, 0.42),   # façade de la rangée gauche
-        ('kpi2', 168, 0.27, 0.60),    # pilastre gauche de la vitrine métal noir
-        ('kpi3', 168, 0.55, 0.22),    # étage de la façade du bâtiment héros
-        ('kpi4', 168, 0.87, 0.48)],   # rangée de droite
-    2: [('ouvrir', 100, 0.38, 0.34)],       # verrière intérieure (mur porteur ouvert)
+    1: [('kpi1', 118, 0.09, 0.42),    # façade de la rangée gauche
+        ('kpi2', 118, 0.21, 0.58),    # pilastre gauche de la vitrine métal noir
+        ('kpi3', 118, 0.60, 0.16),    # étage de la façade du bâtiment héros
+        ('kpi4', 118, 0.88, 0.46)],   # rangée de droite
+    2: [('ouvrir', 110, 0.36, 0.30)],       # verrière intérieure (mur porteur ouvert)
     3: [('eclairer', 126, 0.66, 0.56)],     # garde-corps mezzanine sous la verrière
     4: [('isoler', 150, 0.73, 0.33)],       # mur brique + laine entre montants
     5: [('reveler', 110, 0.66, 0.14)],      # bandeau de la devanture bleue

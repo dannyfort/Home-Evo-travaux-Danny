@@ -90,15 +90,15 @@
 <!-- ===================== HERO IDLE v6 — vie au repos avant le premier scroll =====================
      Boucle 8 s plan fixe (start = end = frame 0 du leg 1) : éléments en apesanteur + nuages.
      Visible tant que p ≈ 0 ; fade rapide dès que le scrub commence (hook onFrame). -->
-<video id="hero-idle" muted loop playsinline autoplay preload="auto" poster="assets/chantier.webp?v=v7" style="position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; pointer-events: none; will-change: opacity;"></video>
+<video id="hero-idle" muted loop playsinline autoplay preload="auto" poster="assets/chantier.webp?v=v8" style="position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; pointer-events: none; will-change: opacity;"></video>
 
 <!-- ===================== HERO TITLE v6 — typo rotoscopée derrière le monde =====================
      Sandwich : film (canvas z0) → titre (z2) → matte alpha de la frame 0 (tout sauf le ciel).
      Le titre vit dans le ciel, occulté par le bâtiment, les poutres en lévitation et les toits.
      Au premier scroll il S'ÉLÈVE et fade (hook dans onFrame), la matte fade plus vite. -->
 <div id="hero-title-stage" aria-hidden="true" style="position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;">
-  <p id="hero-title" style="position: absolute; left: 50%; top: 11.5vh; transform: translateX(-50%); margin: 0; text-align: center; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; font-size: clamp(20px, 7.2vw, 118px); line-height: 0.95; letter-spacing: 0.02em; color: #ffffff; text-shadow: 0 2px 44px rgba(38, 32, 24, 0.22); white-space: nowrap; will-change: transform, opacity;">HOME ECO TRAVAUX</p>
-  <img id="hero-matte" src="assets/hero-matte.webp?v=v7" alt="" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: opacity;">
+  <p id="hero-title" style="position: absolute; left: 52%; top: 11vh; transform: translateX(-50%); margin: 0; text-align: center; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; font-size: clamp(20px, 6vw, 100px); line-height: 0.95; letter-spacing: 0.02em; color: #ffffff; text-shadow: 0 2px 44px rgba(38, 32, 24, 0.22); white-space: nowrap; will-change: transform, opacity;">HOME ECO TRAVAUX</p>
+  <img id="hero-matte" src="assets/hero-matte.webp?v=v9" alt="" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: opacity;">
 </div>
 
 <!-- ===================== GLASS UI LAYER ===================== -->
@@ -137,7 +137,7 @@
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3.5 9.5 7 13l7.5-8" stroke="#f2efe9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </div>
             <p style="margin: 0 0 6px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 19px; color: #26221c;">Merci ! Nous revenons vers vous sous 24h.</p>
-            <p style="margin: 0; font-size: 12.5px; color: #6e675c;">Ou écrivez-nous : <a href="mailto:contact@home-eco-travaux.com" style="color: var(--het-acc, #96522c);">contact@home-eco-travaux.com</a></p>
+            <p style="margin: 0; font-size: 12.5px; color: #6e675c;">Ou écrivez-nous : <a href="mailto:contact@home-eco-travaux.com" style="color: #2f5540;">contact@home-eco-travaux.com</a></p>
           </div>
         </div>
       </div>
@@ -173,50 +173,50 @@
       <rect x="1" y="1" width="20" height="32" rx="10" stroke="#33302a" stroke-width="1.6" fill="rgba(251,250,247,0.35)"></rect>
       <circle cx="11" cy="9" r="2.4" fill="#33302a" style="animation: hetWheel 1.8s ease-in-out infinite;"></circle>
     </svg>
-    <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--het-acc, #96522c); text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9);">défiler pour entrer</span>
+    <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #2f5540; text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9);">défiler pour entrer</span>
   </div>
 
   <!-- TRANSITION 1→2 — la constellation KPI, débris figés en plein air -->
   <div id="card-kpi-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 236px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 18px 22px 16px;">
-      <p id="kpi-num-1" style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1;">25 ans</p>
+      <p id="kpi-num-1" style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: #2f5540; line-height: 1;">25 ans</p>
       <p style="margin: 0; font-size: 13.5px; color: #3d3831;">de main d'œuvre experte à Rouen</p>
-      <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-1" style="height: 100%; width: 0%; background: var(--het-acc-b, #c97e4a); border-radius: 2px;"></div></div>
+      <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-1" style="height: 100%; width: 0%; background: #2f5540; border-radius: 2px;"></div></div>
     </div>
   </div>
   <div id="card-kpi-2" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 252px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 18px 22px 16px; display: flex; align-items: center; gap: 14px;">
       <div style="flex: 1;">
-        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1.15;">Tous corps de métier</p>
+        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: #2f5540; line-height: 1.15;">Tous corps de métier</p>
         <p style="margin: 0; font-size: 13.5px; color: #3d3831;">réunis sous un même toit</p>
       </div>
       <div id="kpi-bars-2" aria-hidden="true" style="display: flex; align-items: flex-end; gap: 3px; height: 34px;">
-        <span style="width: 5px; height: 14px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
-        <span style="width: 5px; height: 22px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
-        <span style="width: 5px; height: 18px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
-        <span style="width: 5px; height: 28px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
-        <span style="width: 5px; height: 34px; border-radius: 3px; background: var(--het-acc-b, #c97e4a); transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 14px; border-radius: 3px; background: #2f5540; transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 22px; border-radius: 3px; background: #2f5540; transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 18px; border-radius: 3px; background: #2f5540; transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 28px; border-radius: 3px; background: #2f5540; transform: scaleY(0); transform-origin: bottom;"></span>
+        <span style="width: 5px; height: 34px; border-radius: 3px; background: #2f5540; transform: scaleY(0); transform-origin: bottom;"></span>
       </div>
     </div>
   </div>
   <div id="card-kpi-3" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 236px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 18px 22px 16px; display: flex; align-items: center; gap: 14px;">
       <div style="flex: 1;">
-        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1.15;">Délais &amp; budget</p>
+        <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 21px; font-weight: 600; color: #2f5540; line-height: 1.15;">Délais &amp; budget</p>
         <p style="margin: 0; font-size: 13.5px; color: #3d3831;">respectés</p>
       </div>
       <div aria-hidden="true" style="position: relative; width: 46px; height: 46px;">
         <svg width="46" height="46" viewBox="0 0 46 46" style="transform: rotate(-90deg);">
           <circle cx="23" cy="23" r="19" fill="none" stroke="rgba(38,32,24,0.1)" stroke-width="4"></circle>
-          <circle id="kpi-ring-3" cx="23" cy="23" r="19" fill="none" stroke="#c97e4a" style="stroke: var(--het-acc-b, #c97e4a);" stroke-width="4" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"></circle>
+          <circle id="kpi-ring-3" cx="23" cy="23" r="19" fill="none" stroke="#2f5540" stroke-width="4" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"></circle>
         </svg>
-        <span id="kpi-num-3" style="position: absolute; inset: 0; display: grid; place-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; font-weight: 600; color: var(--het-acc, #96522c);">0%</span>
+        <span id="kpi-num-3" style="position: absolute; inset: 0; display: grid; place-items: center; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; font-weight: 600; color: #2f5540;">0%</span>
       </div>
     </div>
   </div>
   <div id="card-kpi-4" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 220px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 18px 22px 16px;">
-      <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: #7ba03f; line-height: 1;">Éco</p>
+      <p style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: #4a7031; line-height: 1;">Éco</p>
       <p style="margin: 0; font-size: 13.5px; color: #3d3831;">démarche responsable</p>
       <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-4" style="height: 100%; width: 0%; background: linear-gradient(90deg, #85a844, #2f5540); border-radius: 2px;"></div></div>
     </div>
@@ -229,13 +229,13 @@
   <div id="card-svc-ouvrir" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-svc-pad" style="padding: 28px 30px 26px;">
       <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
-        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">02</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: #2f5540;">02</span>
         <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Gros œuvre &amp; extension</span>
       </div>
       <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">On ouvre les volumes.</h2>
       <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.6; color: #3d3831;">Maçonnerie, charpente, ouverture de murs porteurs, agrandissement. La structure de vos projets, maîtrisée de bout en bout.</p>
       <div style="margin: 0 0 14px; padding: 11px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(38, 32, 24, 0.08);">
-        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: var(--het-acc, #96522c);">LA MAIN D'ŒUVRE HET</p>
+        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: #2f5540;">LA MAIN D'ŒUVRE HET</p>
         <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3d3831;">Une ouverture porteuse ne pardonne rien : étude, étaiement, reprise de charge — le geste juste à chaque étape, par nos maçons et nos charpentiers.</p>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
@@ -243,7 +243,7 @@
         <span class="het-tag">Extension</span>
         <span class="het-tag">Maçonnerie</span>
       </div>
-      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/gros-oeuvre-extension" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/gros-oeuvre-extension" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
     </div>
   </div>
 
@@ -251,13 +251,13 @@
   <div id="card-svc-eclairer" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-svc-pad" style="padding: 28px 30px 26px;">
       <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
-        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">01</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: #2f5540;">01</span>
         <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Rénovation intérieure</span>
       </div>
       <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">La lumière entre.</h2>
       <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.6; color: #3d3831;">Cuisines, salles de bain, appartements et maisons entièrement repensés. Un intérieur qui vous ressemble, du plan aux finitions.</p>
       <div style="margin: 0 0 14px; padding: 11px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(38, 32, 24, 0.08);">
-        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: var(--het-acc, #96522c);">LA MAIN D'ŒUVRE HET</p>
+        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: #2f5540;">LA MAIN D'ŒUVRE HET</p>
         <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3d3831;">Verrières posées au millimètre, enduits tirés à l'œil : la lumière révèle tout — c'est là que la main de nos artisans fait la différence.</p>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
@@ -265,7 +265,7 @@
         <span class="het-tag">Menuiseries</span>
         <span class="het-tag">Finitions</span>
       </div>
-      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-interieure" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-interieure" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
     </div>
   </div>
 
@@ -273,13 +273,13 @@
   <div id="card-svc-isoler" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(480px, 42vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-svc-pad" style="padding: 28px 30px 26px;">
       <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
-        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">04</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: #2f5540;">04</span>
         <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Rénovation énergétique</span>
       </div>
       <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">Votre confort, isolé.</h2>
       <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.6; color: #3d3831;">Isolation, sortie de passoire thermique, accompagnement aux aides. L'« Eco » de Home Eco Travaux, ce n'est pas qu'un nom.</p>
       <div style="margin: 0 0 14px; padding: 11px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(38, 32, 24, 0.08);">
-        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: var(--het-acc, #96522c);">LA MAIN D'ŒUVRE HET</p>
+        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: #2f5540;">LA MAIN D'ŒUVRE HET</p>
         <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3d3831;">La performance vient de la pose : chaque panneau découpé et ajusté à la main entre les montants, les ponts thermiques traqués un à un.</p>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
@@ -289,7 +289,7 @@
         <span class="het-tag">Menuiseries performantes</span>
         <span class="het-tag">Aides financières</span>
       </div>
-      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-energetique" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">Découvrir la rénovation énergétique →</a>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/renovation-energetique" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; transition: letter-spacing 0.3s;">Découvrir la rénovation énergétique →</a>
     </div>
   </div>
 
@@ -297,13 +297,13 @@
   <div id="card-svc-reveler" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(460px, 40vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-svc-pad" style="padding: 28px 30px 26px;">
       <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;">
-        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: var(--het-acc-b, #c97e4a);">03</span>
+        <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 600; color: #2f5540;">03</span>
         <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Aménagement pro &amp; commerces</span>
       </div>
       <h2 style="margin: 0 0 12px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 34px; line-height: 1.08; color: #26221c;">Votre image, révélée.</h2>
       <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.6; color: #3d3831;">Bureaux, boutiques, devantures et mises aux normes. Nous transformons les espaces pour refléter l'esprit de votre entreprise.</p>
       <div style="margin: 0 0 14px; padding: 11px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(38, 32, 24, 0.08);">
-        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: var(--het-acc, #96522c);">LA MAIN D'ŒUVRE HET</p>
+        <p style="margin: 0 0 4px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.16em; color: #2f5540;">LA MAIN D'ŒUVRE HET</p>
         <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3d3831;">Devanture préparée, peinte et réglée sur place par nos équipes : l'image de votre commerce se joue au coup de pinceau.</p>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
@@ -311,18 +311,18 @@
         <span class="het-tag">Bureaux</span>
         <span class="het-tag">Mise aux normes</span>
       </div>
-      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/amenagement-pro-commerces" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/nos-services/amenagement-pro-commerces" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; transition: letter-spacing 0.3s;">En savoir plus →</a>
     </div>
   </div>
 
   <!-- SCENE 6 · livre — Beat 1 : témoignage -->
   <div id="card-temoignage" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(620px, 52vw); border-radius: 24px; box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-tem-pad" style="padding: 30px 34px 28px;">
-      <p style="margin: 0 0 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Témoignages <span style="color: var(--het-acc-b, #c97e4a);">★★★★★</span> 5/5 · Avis clients</p>
+      <p style="margin: 0 0 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Témoignages <span style="color: #2f5540;">★★★★★</span> 5/5 · Avis clients</p>
       <blockquote style="margin: 0 0 16px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 500; font-size: clamp(20px, 1.8vw, 25px); line-height: 1.35; color: #26221c;">« C'était fluide, simple, ça m'a dégagé beaucoup de temps. Le respect des délais, le respect des budgets&nbsp;: il n'y avait pas de surprise. »</blockquote>
       <p style="margin: 0 0 2px; font-size: 14px; font-weight: 600; color: #26221c;">— Jean-Baptiste Leroy, dirigeant de l'agence Evvi</p>
       <p style="margin: 0 0 16px; font-size: 13px; color: #6e675c;">Plateau de bureaux de 350 m² — exécuté par les équipes HET, délais et budget tenus</p>
-      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/temoignages" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; transition: letter-spacing 0.3s;">Voir tous les témoignages →</a>
+      <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/temoignages" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; transition: letter-spacing 0.3s;">Voir tous les témoignages →</a>
     </div>
   </div>
 
@@ -330,13 +330,13 @@
   <div id="card-port-head" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: min(640px, 60vw); text-align: center; will-change: transform, opacity; transform-origin: 50% 50%;">
     <h2 style="margin: 0 0 8px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(28px, 2.6vw, 40px); line-height: 1.12; color: #26221c; text-shadow: 0 2px 26px rgba(242, 239, 233, 0.85);">Chaque chantier raconte une transformation</h2>
     <p style="margin: 0 0 10px; font-size: 15px; color: #3d3831; text-shadow: 0 1px 18px rgba(242, 239, 233, 0.9);">Des chantiers exécutés par nos propres équipes — à Rouen, en Normandie et au-delà.</p>
-    <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/realisations" style="font-size: 14px; font-weight: 600; color: var(--het-acc, #96522c); text-decoration: none; text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9); transition: letter-spacing 0.3s;">Toutes nos réalisations →</a>
+    <a class="het-link-arrow" href="https://home-eco-travaux-site.vercel.app/realisations" style="font-size: 14px; font-weight: 600; color: #2f5540; text-decoration: none; text-shadow: 0 1px 14px rgba(242, 239, 233, 0.9); transition: letter-spacing 0.3s;">Toutes nos réalisations →</a>
   </div>
 
   <div id="card-proj-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/thiouville.jpg" alt="Château de Thiouville — écuries rénovées" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PATRIMOINE</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #2f5540;">PATRIMOINE</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Château de Thiouville — les écuries transformées</p>
@@ -346,7 +346,7 @@
   <div id="card-proj-2" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/plaza.jpg" alt="Agence Stéphane Plaza Immobilier à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PROFESSIONNEL</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #2f5540;">PROFESSIONNEL</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Agence Stéphane Plaza Immobilier — Rouen Rive Droite</p>
@@ -356,7 +356,7 @@
   <div id="card-proj-3" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/yvonne.jpg" alt="Boulangerie Yvonne à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">COMMERCE</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #2f5540;">COMMERCE</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Boulangerie Yvonne — d'une boutique SNCF à un commerce aux normes</p>
@@ -366,7 +366,7 @@
   <div id="card-proj-4" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/cuisine.jpg" alt="Cuisine sur-mesure" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PARTICULIER</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #2f5540;">PARTICULIER</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Cuisine sur-mesure — reflet du style de la maison</p>
@@ -376,7 +376,7 @@
 
   <!-- footer strip -->
   <div id="card-footer" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; max-width: 90vw; border-radius: 22px; box-shadow: 0 16px 36px -16px rgba(38, 32, 24, 0.3); will-change: transform, opacity; transform-origin: 50% 50%;">
-    <p style="margin: 0; padding: 11px 26px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.04em; color: #6e675c; text-align: center; line-height: 1.7;">© 2026 Home Eco Travaux — Rouen &amp; Normandie (76) · <a href="tel:+33680758335" style="color: var(--het-acc, #96522c); text-decoration: none;">06 80 75 83 35</a> · <a href="tel:+33981642555" style="color: var(--het-acc, #96522c); text-decoration: none;">09 81 64 25 55</a> · <a href="mailto:contact@home-eco-travaux.com" style="color: var(--het-acc, #96522c); text-decoration: none;">contact@home-eco-travaux.com</a> · <a href="https://www.instagram.com/home_eco_travaux" style="color: var(--het-acc, #96522c); text-decoration: none;">Instagram</a> · <a href="https://home-eco-travaux-site.vercel.app/mentions-legales" style="color: var(--het-acc, #96522c); text-decoration: none;">Mentions légales</a> · <a href="https://home-eco-travaux-site.vercel.app/politique-confidentialite" style="color: var(--het-acc, #96522c); text-decoration: none;">Confidentialité</a></p>
+    <p style="margin: 0; padding: 11px 26px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.04em; color: #6e675c; text-align: center; line-height: 1.7;">© 2026 Home Eco Travaux — Rouen &amp; Normandie (76) · <a href="tel:+33680758335" style="color: #2f5540; text-decoration: none;">06 80 75 83 35</a> · <a href="tel:+33981642555" style="color: #2f5540; text-decoration: none;">09 81 64 25 55</a> · <a href="mailto:contact@home-eco-travaux.com" style="color: #2f5540; text-decoration: none;">contact@home-eco-travaux.com</a> · <a href="https://www.instagram.com/home_eco_travaux" style="color: #2f5540; text-decoration: none;">Instagram</a> · <a href="https://home-eco-travaux-site.vercel.app/mentions-legales" style="color: #2f5540; text-decoration: none;">Mentions légales</a> · <a href="https://home-eco-travaux-site.vercel.app/politique-confidentialite" style="color: #2f5540; text-decoration: none;">Confidentialité</a></p>
   </div>
 </div>
 
@@ -453,6 +453,22 @@
   var SCENE_NAMES = ['chantier', 'ouvrir', 'eclairer', 'isoler', 'reveler', 'livre'];
   var LINGERS = [0.35, 0, 0.4, 0, 0, 0.45];          // dwell caméra v7 par scène
   var SCENE_STARTS = [0, 0.22, 0.36, 0.52, 0.68, 0.80];
+  var LEG_BOUNDS = [0, 0.22, 0.36, 0.52, 0.68, 0.80, 1.0001];
+  var LEG_FRAMES = [119, 155, 169, 169, 169, 169];    // legs 720p24 (1-2 régénérés 21/07)
+  // p à la frame f du leg li — inverse le remap lingerEase du moteur (bisection,
+  // fonction monotone). Les fenêtres des cartes se déclarent en BEATS du film
+  // (« le boulanger entre à la frame 122 »), pas en % de scroll : la carte
+  // n'apparaît que quand la transformation de la scène est aboutie à l'écran.
+  function pOfFrame(li, f) {
+    var cur = Math.max(0, Math.min(1, f / (LEG_FRAMES[li] - 1)));
+    var L = LINGERS[li] || 0, lo = 0, hi = 1, mid, c, i;
+    for (i = 0; i < 48; i++) {
+      mid = (lo + hi) / 2;
+      c = (1 - L) * mid + L * (4 * Math.pow(mid - 0.5, 3) + 0.5);
+      if (c < cur) lo = mid; else hi = mid;
+    }
+    return LEG_BOUNDS[li] + mid * (LEG_BOUNDS[li + 1] - LEG_BOUNDS[li]);
+  }
   var R_MUL = 0.75, F_MUL = 1.05;                     // réglages verre validés au canvas
 
   var api = null;
@@ -588,23 +604,23 @@
     forceTierC: !window.THREE,
     legs: SCENE_NAMES.map(function (n, i) {
       return {
-        src: 'assets/vid/leg-' + (i + 1) + '.mp4?v=v7',
-        srcMobile: 'assets/vid/leg-' + (i + 1) + '-m.mp4?v=v7',
-        poster: 'assets/' + n + '.webp?v=v7',
+        src: 'assets/vid/leg-' + (i + 1) + '.mp4?v=v8',
+        srcMobile: 'assets/vid/leg-' + (i + 1) + '-m.mp4?v=v8',
+        poster: 'assets/' + n + '.webp?v=v8',
         linger: LINGERS[i],
       };
     }),
     legBounds: [0, 0.22, 0.36, 0.52, 0.68, 0.80, 1.0001],
     // matchmove : solve caméra des 6 legs (tools/track_legs.py) — les cartes
     // taguées `track` suivent exactement le mur/élément qu'elles annotent
-    tracksUrl: 'assets/tracks-v7.json?v=1',
+    tracksUrl: 'assets/tracks-v7.json?v=2',
     onFrame: onFrame,
   });
 
   // ---------- HERO v6 : boucle idle au repos + write-on GSAP du titre ----------
   var idleV = $('hero-idle');
   if (idleV) {
-    idleV.src = (M ? 'assets/vid/idle-m.mp4' : 'assets/vid/idle.mp4') + '?v=v8';
+    idleV.src = (M ? 'assets/vid/idle-m.mp4' : 'assets/vid/idle.mp4') + '?v=v9';
     var ipr = idleV.play(); if (ipr && ipr.catch) ipr.catch(function () {});
   }
   var tEl = $('hero-title');
@@ -656,7 +672,7 @@
     // fois : elle prend le relais dès le premier geste de scroll (p 0.05).
     var devisEl = $('card-devis');
     reg('card-devis', {
-      ranges: M ? [[0.05, 0.158], [0.925, 1.03]] : [[0, 0.152], [0.925, 1.03]],
+      ranges: M ? [[0.05, 0.158], [0.955, 1.03]] : [[0, 0.152], [0.955, 1.03]],
       enterW: 0.24, exitW: 0.16, depth: 0.9, pin: 0.18,
       frost: 0.72, refr: 1, loadDelay: 0.25, focusable: true, tiltMax: 5, spinIn: true, float: 1.25,
       anchor: function (vw, vh, ri) {
@@ -680,11 +696,15 @@
     // à un point de l'architecture (rangée gauche, pilastre de la vitrine,
     // étage de la façade héros, rangée droite) et suit le dolly de la caméra
     var kpiPos = [[0.1, 0.27, 0.5], [0.3, 0.6, 1.15], [0.53, 0.23, 0.8], [0.71, 0.57, 1.4]];
-    var kpiOff = [[150, -80], [-40, 120], [150, -70], [-90, 140]];
+    var kpiOff = [[150, -80], [-40, 120], [150, 90], [-90, 140]];
+    // Beats : chaque KPI n'apparaît que lorsque SON sujet est assemblé à
+    // l'écran — rangées latérales/étage dès f85-99, pilastre de la vitrine
+    // métal noir seulement quand elle s'est matérialisée (f108/118)
+    var kpiBeat = [85, 108, 92, 99];
     kpiPos.forEach(function (k, i) {
       var el = $('card-kpi-' + (i + 1));
       reg('card-kpi-' + (i + 1), {
-        ranges: [[0.149 + i * 0.006, 0.235 + i * 0.004]], enterW: 0.22, exitW: 0.18,
+        ranges: [[pOfFrame(0, kpiBeat[i]), pOfFrame(1, 18 + i * 4)]], enterW: 0.22, exitW: 0.18,
         depth: k[2], frost: 0.5, radius: 20, float: 0.6, tiltMax: 7,
         track: { leg: 0, name: 'kpi' + (i + 1), off: kpiOff[i], blend: M ? 0.35 : 1 },
         anchor: function (vw, vh) {
@@ -695,7 +715,7 @@
     });
     var trustEl = $('card-trust');
     reg('card-trust', {
-      ranges: [[0.176, 0.242]], enterW: 0.25, exitW: 0.2, depth: 0.6, frost: 0.68, radius: 999, float: 0.5, pin: 0,
+      ranges: [[pOfFrame(0, 112), pOfFrame(1, 34)]], enterW: 0.25, exitW: 0.2, depth: 0.6, frost: 0.68, radius: 999, float: 0.5, pin: 0,
       anchor: function (vw, vh) { return [(vw - W(trustEl)) / 2, vh - H(trustEl) - (M ? 18 : 24)]; },
     });
 
@@ -704,11 +724,18 @@
     // (leg 2), mezzanine sous verrière zénithale (leg 3), mur isolé entre
     // montants (leg 4), bandeau de la devanture bleue (leg 5). Les fenêtres
     // de scroll sont recalées sur l'apparition réelle du sujet dans le film.
+    // Fenêtres = BEATS du film (pOfFrame) : la carte n'arrive que quand la
+    // transformation de la scène est aboutie à l'écran, et déborde la couture
+    // (prolongement `ext` du solve) tant que le sujet reste cadré.
     var svc = [
-      ['card-svc-ouvrir', [0.226, 0.358], 'left', 1, { leg: 1, name: 'ouvrir', off: [-290, 150] }],
-      ['card-svc-eclairer', [0.43, 0.518], 'right', 1.35, { leg: 2, name: 'eclairer', off: [270, -50] }],
-      ['card-svc-isoler', [0.578, 0.678], 'left', 1, { leg: 3, name: 'isoler', off: [-400, 90] }],
-      ['card-svc-reveler', [0.716, 0.798], 'right', 1, { leg: 4, name: 'reveler', off: [250, 200] }],
+      // boulangerie : comptoir posé + LE BOULANGER EST ENTRÉ (leg 2 f~105)
+      ['card-svc-ouvrir', [pOfFrame(1, 108), pOfFrame(2, 38)], 'left', 1, { leg: 1, name: 'ouvrir', off: [-240, 170] }],
+      // atrium : traversée finie, verrière zénithale plein cadre (leg 3 f~92)
+      ['card-svc-eclairer', [pOfFrame(2, 92), pOfFrame(3, 22)], 'right', 1.35, { leg: 2, name: 'eclairer', off: [270, -50] }],
+      // mur d'isolation + artisan lisibles plein cadre (leg 4 f~108)
+      ['card-svc-isoler', [pOfFrame(3, 108), pOfFrame(4, 40)], 'left', 1, { leg: 3, name: 'isoler', off: [-400, 90] }],
+      // devanture : peinture bleue achevée, auvent qui se déploie (leg 5 f~90)
+      ['card-svc-reveler', [pOfFrame(4, 90), pOfFrame(5, 18)], 'right', 1, { leg: 4, name: 'reveler', off: [250, 200] }],
     ];
     svc.forEach(function (def) {
       var id = def[0], range = def[1], side = def[2], refr = def[3], track = def[4];
@@ -732,7 +759,8 @@
     // la caméra traverse la devanture vers la pièce finie
     var temEl = $('card-temoignage');
     reg('card-temoignage', {
-      ranges: [[0.802, 0.86]], enterW: 0.2, exitW: 0.16, depth: 0.8, frost: 0.6, pin: 0.5,
+      // beat : le mur vert sapin achève de se peindre (leg 6 f~66-84)
+      ranges: [[pOfFrame(5, 66), pOfFrame(5, 96)]], enterW: 0.2, exitW: 0.16, depth: 0.8, frost: 0.6, pin: 0.5,
       float: 0.25, track: { leg: 5, name: 'temoignage', off: [340, 170], blend: M ? 0.45 : 1 },
       anchor: function (vw, vh) {
         if (M) return [(vw - W(temEl)) / 2, Math.max(84, vh - H(temEl) - 90)];
@@ -741,14 +769,14 @@
     });
     var phEl = $('card-port-head');
     reg('card-port-head', {
-      glass: false, ranges: [[0.856, 0.93]], enterW: 0.16, exitW: 0.14, depth: 0.4, float: 0.4, pin: 0.25,
+      glass: false, ranges: [[0.92, 0.965]], enterW: 0.16, exitW: 0.14, depth: 0.4, float: 0.4, pin: 0.25,
       anchor: function (vw, vh) { return [(vw - W(phEl)) / 2, Math.max(M ? 92 : 118, vh * 0.11)]; },
     });
     var projPos = [[0.055, 0.36, 0.6], [0.29, 0.52, 1.2], [0.525, 0.33, 0.85], [0.755, 0.5, 1.45]];
     projPos.forEach(function (k, i) {
       var el = $('card-proj-' + (i + 1));
       reg('card-proj-' + (i + 1), {
-        ranges: [[0.858 + i * 0.004, 0.926 + i * 0.003]], enterW: 0.2, exitW: 0.16,
+        ranges: [[0.922 + i * 0.004, 0.962 + i * 0.003]], enterW: 0.2, exitW: 0.16,
         depth: k[2], frost: 0.45, radius: 20, float: 1.1, tiltMax: 7,
         anchor: function (vw, vh) {
           var cw = W(el) || 264, gap = M ? 12 : 16;
@@ -808,7 +836,7 @@
   });
 
   /* ---------- rail : saut aux points de dwell ---------- */
-  var DWELL = [0.04, 0.28, 0.43, 0.6, 0.735, 0.84];
+  var DWELL = [0.04, 0.34, 0.48, 0.66, 0.775, 0.89];
   Array.prototype.forEach.call(document.querySelectorAll('.het-dot-row'), function (btn, i) {
     btn.addEventListener('click', function () { if (api) api.scrollToP(DWELL[i]); });
   });
@@ -820,7 +848,7 @@
     var tr = $('het-track');
     var max = Math.max(1, (tr.offsetHeight || (document.scrollingElement || document.documentElement).scrollHeight) - window.innerHeight);
     var p = (window.scrollY || 0) / max;
-    api.scrollToP((M || p > 0.5) ? 0.965 : 0.02);
+    api.scrollToP((M || p > 0.5) ? 0.98 : 0.02);
     setTimeout(function () { var n = $('devis-nom'); if (n) n.focus({ preventScroll: true }); }, 900);
   });
 })();
