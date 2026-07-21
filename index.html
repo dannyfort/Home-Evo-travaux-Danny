@@ -35,19 +35,19 @@
   .het-link-arrow:hover { letter-spacing: 0.02em; }
   .het-hov-card { transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
   .het-hov-card:hover { box-shadow: 0 44px 84px -26px rgba(38, 32, 24, 0.5) !important; }
-  .het-field { height: 34px; padding: 0 11px; border-radius: 11px; border: 1px solid rgba(228, 222, 207, 0.9); background: rgba(251, 250, 247, 0.55); font-size: 14px; color: #26221c; outline-offset: 0; }
+  .het-field { height: 34px; padding: 0 11px; border-radius: 11px; border: 1px solid rgba(38, 32, 24, 0.1); background: rgba(255, 255, 255, 0.62); font-size: 14px; color: #26221c; outline-offset: 0; }
   textarea.het-field { height: auto; padding: 9px 12px; border-radius: 12px; resize: none; line-height: 1.4; }
-  .het-field:focus { border-color: var(--het-acc-b, #c97e4a); background: rgba(251, 250, 247, 0.8); }
+  .het-field:focus { border-color: var(--het-acc-b, #c97e4a); background: rgba(255, 255, 255, 0.88); }
   .het-label { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #2F5540; }
-  .het-chip { padding: 6px 13px; border-radius: 999px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.05em; cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s; background: rgba(251, 250, 247, 0.5); color: #3d3831; border: 1px solid rgba(228, 222, 207, 0.9); }
+  .het-chip { padding: 6px 13px; border-radius: 999px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.05em; cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s; background: rgba(255, 255, 255, 0.6); color: #3d3831; border: 1px solid rgba(38, 32, 24, 0.1); }
   .het-chip.is-on { background: #2f5540; color: #fbfaf7; border-color: #2f5540; }
   .het-btn-primary { margin-top: 4px; height: 42px; border: none; border-radius: 999px; background: #2f5540; color: #fbfaf7; font-size: 14.5px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
   .het-btn-primary:hover { background: #24432f; }
   .het-btn-ghost { display: grid; place-items: center; height: 36px; border-radius: 999px; border: 1px solid rgba(47, 85, 64, 0.4); color: #2f5540; font-size: 13.5px; font-weight: 500; text-decoration: none; transition: border-color 0.3s, background 0.3s; }
-  .het-btn-ghost:hover { border-color: var(--het-acc, #96522c); background: rgba(251, 250, 247, 0.4); }
+  .het-btn-ghost:hover { border-color: var(--het-acc, #96522c); background: rgba(255, 255, 255, 0.5); }
   .het-cta-menu { display: inline-grid; place-items: center; height: 38px; padding: 0 18px; border-radius: 999px; background: #2f5540; color: #fbfaf7 !important; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.3s; white-space: nowrap; }
   .het-cta-menu:hover { background: #24432f; }
-  .het-tag { padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(228, 222, 207, 0.9); background: rgba(251, 250, 247, 0.4); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #3d3831; }
+  .het-tag { padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(38, 32, 24, 0.1); background: rgba(255, 255, 255, 0.55); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.06em; color: #3d3831; }
   /* Mobile — parité avec la landing v7 : nav masquée, cartes recalées plein écran */
   @media (max-width: 860px) {
     /* !important : ces éléments portent un display inline posé par le canvas */
@@ -72,7 +72,7 @@
   @media (prefers-reduced-motion: reduce) { .het-anim { animation: none !important; } }
   /* Tier C — pas de WebGL / prefers-reduced-motion : fallback statique lisible */
   .het-tier-c .het-layer { position: static !important; perspective: none !important; pointer-events: auto !important; height: auto !important; }
-  .het-tier-c .het-card { position: relative !important; visibility: visible !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; filter: none !important; margin: 28px auto !important; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(228, 222, 207, 0.85); max-width: min(92vw, 560px); }
+  .het-tier-c .het-card { position: relative !important; visibility: visible !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; filter: none !important; margin: 28px auto !important; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(38, 32, 24, 0.08); max-width: min(92vw, 560px); }
   .het-tier-c .het-track { display: none; }
   .het-tier-c #card-hero { position: relative !important; visibility: visible !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; margin: 28px auto !important; max-width: min(92vw, 560px); }
   .het-tier-c #card-hint { display: none !important; }
@@ -97,7 +97,7 @@
      Le titre vit dans le ciel, occulté par le bâtiment, les poutres en lévitation et les toits.
      Au premier scroll il S'ÉLÈVE et fade (hook dans onFrame), la matte fade plus vite. -->
 <div id="hero-title-stage" aria-hidden="true" style="position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;">
-  <p id="hero-title" style="position: absolute; left: 50%; top: 11vh; transform: translateX(-50%); margin: 0; text-align: center; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; font-size: clamp(42px, 7vw, 128px); line-height: 0.95; letter-spacing: 0.01em; color: #ffffff; text-shadow: 0 2px 44px rgba(38, 32, 24, 0.16); white-space: nowrap; will-change: transform, opacity;">HOME<br>ECO<br>TRAVAUX</p>
+  <p id="hero-title" style="position: absolute; left: 50%; top: 11.5vh; transform: translateX(-50%); margin: 0; text-align: center; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; font-size: clamp(20px, 7.2vw, 118px); line-height: 0.95; letter-spacing: 0.02em; color: #ffffff; text-shadow: 0 2px 44px rgba(38, 32, 24, 0.22); white-space: nowrap; will-change: transform, opacity;">HOME ECO TRAVAUX</p>
   <img id="hero-matte" src="assets/hero-matte.webp?v=v7" alt="" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: opacity;">
 </div>
 
@@ -115,17 +115,17 @@
         <span style="display: block;"><span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;">rénovation</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.66s backwards;">à</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.72s backwards;">Rouen,</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.78s backwards;">du</span></span>
         <span style="display: block;"><span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.84s backwards;">gros</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s backwards;">œuvre</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.96s backwards;">aux</span> <span class="het-anim" style="display: inline-block; animation: hetWordIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.02s backwards;">finitions.</span></span>
       </h1>
-      <p class="het-anim" style="margin: 0; max-width: 52ch; font-size: clamp(14.5px, 1.05vw, 16.5px); line-height: 1.6; color: #3d3831; animation: hetRiseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.15s backwards;">Depuis 25 ans, Home Eco Travaux transforme maisons, appartements et locaux professionnels dans toute l'agglomération rouennaise. Un seul interlocuteur, tous les corps de métier.</p>
+      <p class="het-anim" style="margin: 0; max-width: 52ch; font-size: clamp(14.5px, 1.05vw, 16.5px); line-height: 1.6; color: #3d3831; animation: hetRiseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.15s backwards;">Depuis 25 ans, Home Eco Travaux transforme maisons, appartements et locaux professionnels dans toute l'agglomération rouennaise. Un seul interlocuteur, nos équipes tous corps de métier — et une exigence de main d'œuvre qui se voit, du gros œuvre aux finitions.</p>
       <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px;">
         <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.3s backwards;">25 ans</span>
-        <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.42s backwards;">Tous corps de métier</span>
+        <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.42s backwards;">Main d'œuvre tous corps de métier</span>
         <span class="het-anim" style="padding: 10px 20px; border-radius: 999px; background: rgba(221, 228, 217, 0.92); border: 1px solid rgba(38, 32, 24, 0.05); font-size: 15px; font-weight: 600; color: #242b23; animation: hetChipIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) 1.54s backwards;">Devis gratuit</span>
       </div>
     </div>
   </div>
 
   <!-- THE DEVIS CARD — pièce maîtresse de l'intro, revient à la finale -->
-  <div id="card-devis" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 336px; border-radius: 22px; background: rgba(251, 250, 247, 0.55); box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
+  <div id="card-devis" class="het-card het-hov-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 336px; border-radius: 22px; background: rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -22px rgba(38, 32, 24, 0.38); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 19px 21px 17px;">
       <p style="margin: 0 0 5px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6e675c;">Devis gratuit · Sans engagement</p>
       <h2 style="margin: 0 0 3px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 23px; line-height: 1.1; color: #26221c;">Parlons de votre projet</h2>
@@ -180,7 +180,7 @@
   <div id="card-kpi-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 236px; border-radius: 20px; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.34); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div style="padding: 18px 22px 16px;">
       <p id="kpi-num-1" style="margin: 0 0 3px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 30px; font-weight: 600; color: var(--het-acc-b, #c97e4a); line-height: 1;">25 ans</p>
-      <p style="margin: 0; font-size: 13.5px; color: #3d3831;">d'expérience à Rouen</p>
+      <p style="margin: 0; font-size: 13.5px; color: #3d3831;">de main d'œuvre experte à Rouen</p>
       <div aria-hidden="true" style="margin-top: 10px; height: 3px; border-radius: 2px; background: rgba(38, 32, 24, 0.1); overflow: hidden;"><div id="kpi-bar-1" style="height: 100%; width: 0%; background: var(--het-acc-b, #c97e4a); border-radius: 2px;"></div></div>
     </div>
   </div>
@@ -320,7 +320,7 @@
   <div id="card-proj-1" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/thiouville.jpg" alt="Château de Thiouville — écuries rénovées" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PATRIMOINE</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PATRIMOINE</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Château de Thiouville — les écuries transformées</p>
@@ -330,7 +330,7 @@
   <div id="card-proj-2" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/plaza.jpg" alt="Agence Stéphane Plaza Immobilier à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PROFESSIONNEL</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PROFESSIONNEL</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Agence Stéphane Plaza Immobilier — Rouen Rive Droite</p>
@@ -340,7 +340,7 @@
   <div id="card-proj-3" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/yvonne.jpg" alt="Boulangerie Yvonne à Rouen" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">COMMERCE</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">COMMERCE</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Boulangerie Yvonne — d'une boutique SNCF à un commerce aux normes</p>
@@ -350,7 +350,7 @@
   <div id="card-proj-4" class="het-card" style="position: fixed; left: 0; top: 0; visibility: hidden; pointer-events: auto; width: 264px; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px -20px rgba(38, 32, 24, 0.36); will-change: transform, opacity; transform-origin: 50% 50%;">
     <div class="het-proj-media" style="position: relative; height: 140px;">
       <img src="assets/portfolio/cuisine.jpg" alt="Cuisine sur-mesure" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(251, 250, 247, 0.85); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PARTICULIER</span>
+      <span style="position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: var(--het-acc, #96522c);">PARTICULIER</span>
     </div>
     <div style="padding: 14px 16px 14px;">
       <p style="margin: 0 0 3px; font-size: 14px; font-weight: 600; line-height: 1.35; color: #26221c;">Cuisine sur-mesure — reflet du style de la maison</p>
@@ -579,6 +579,9 @@
       };
     }),
     legBounds: [0, 0.22, 0.36, 0.52, 0.68, 0.80, 1.0001],
+    // matchmove : solve caméra des 6 legs (tools/track_legs.py) — les cartes
+    // taguées `track` suivent exactement le mur/élément qu'elles annotent
+    tracksUrl: 'assets/tracks-v7.json?v=1',
     onFrame: onFrame,
   });
 
@@ -600,7 +603,8 @@
           sp.style.display = 'inline-block';
           sp.style.animation = 'het-tl-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both';
           sp.style.animationDelay = (0.45 + tIdx * 0.055).toFixed(3) + 's';
-          sp.textContent = txt.charAt(ci);
+          // espace : nbsp, sinon l'inline-block collapse le blanc et colle les mots
+          sp.textContent = txt.charAt(ci) === ' ' ? ' ' : txt.charAt(ci);
           tFrag.appendChild(sp);
           tIdx++;
         }
@@ -652,13 +656,17 @@
       anchor: function (vw, vh) { return [(vw - W(hintEl)) / 2, vh - 88]; },
     });
 
-    // Constellation KPI — débris figés en l'air, profondeurs étagées
+    // Constellation KPI — matchmovée sur la place : chaque carte est épinglée
+    // à un point de l'architecture (rangée gauche, pilastre de la vitrine,
+    // étage de la façade héros, rangée droite) et suit le dolly de la caméra
     var kpiPos = [[0.1, 0.27, 0.5], [0.3, 0.6, 1.15], [0.53, 0.23, 0.8], [0.71, 0.57, 1.4]];
+    var kpiOff = [[150, -80], [-40, 120], [150, -70], [-90, 140]];
     kpiPos.forEach(function (k, i) {
       var el = $('card-kpi-' + (i + 1));
       reg('card-kpi-' + (i + 1), {
         ranges: [[0.149 + i * 0.006, 0.235 + i * 0.004]], enterW: 0.22, exitW: 0.18,
-        depth: k[2], frost: 0.5, radius: 20, float: 1.3, tiltMax: 7,
+        depth: k[2], frost: 0.5, radius: 20, float: 0.6, tiltMax: 7,
+        track: { leg: 0, name: 'kpi' + (i + 1), off: kpiOff[i], blend: M ? 0.35 : 1 },
         anchor: function (vw, vh) {
           if (M) return [i % 2 ? vw - W(el) - 14 : 14, vh * 0.14 + i * vh * 0.17];
           return [vw * k[0], vh * k[1]];
@@ -671,18 +679,24 @@
       anchor: function (vw, vh) { return [(vw - W(trustEl)) / 2, vh - H(trustEl) - (M ? 18 : 24)]; },
     });
 
-    // Cartes services — chacune dans la scène du film qui la montre
+    // Cartes services — MATCHMOVÉES : chaque carte est rivetée au point-monde
+    // qu'elle annote (solve caméra tools/track_legs.py) : ouverture porteuse
+    // (leg 2), mezzanine sous verrière zénithale (leg 3), mur isolé entre
+    // montants (leg 4), bandeau de la devanture bleue (leg 5). Les fenêtres
+    // de scroll sont recalées sur l'apparition réelle du sujet dans le film.
     var svc = [
-      ['card-svc-ouvrir', [0.226, 0.358], 'left', 1],
-      ['card-svc-eclairer', [0.366, 0.518], 'right', 1.35], // scène du flare caustique
-      ['card-svc-isoler', [0.526, 0.678], 'left', 1],
-      ['card-svc-reveler', [0.686, 0.798], 'right', 1],
+      ['card-svc-ouvrir', [0.226, 0.358], 'left', 1, { leg: 1, name: 'ouvrir', off: [-290, 150] }],
+      ['card-svc-eclairer', [0.43, 0.518], 'right', 1.35, { leg: 2, name: 'eclairer', off: [270, -50] }],
+      ['card-svc-isoler', [0.578, 0.678], 'left', 1, { leg: 3, name: 'isoler', off: [-400, 90] }],
+      ['card-svc-reveler', [0.716, 0.798], 'right', 1, { leg: 4, name: 'reveler', off: [250, 200] }],
     ];
     svc.forEach(function (def) {
-      var id = def[0], range = def[1], side = def[2], refr = def[3];
+      var id = def[0], range = def[1], side = def[2], refr = def[3], track = def[4];
       var el = $(id);
+      track.blend = M ? 0.4 : 1;   // téléphone : le film est croppé serré, on tempère
       reg(id, {
-        ranges: [range], enterW: 0.16, exitW: 0.14, depth: 0.85, frost: 0.58, refr: refr,
+        ranges: [range], enterW: 0.18, exitW: 0.14, depth: 0.85, frost: 0.58, refr: refr,
+        float: 0.25, track: track,
         anchor: function (vw, vh) {
           if (M) return [(vw - W(el)) / 2, vh - H(el) - 76];
           return [
@@ -694,9 +708,12 @@
     });
 
     // SCENE 6 — trois temps
+    // Témoignage riveté au mur vert sapin (signature « livré ») pendant que
+    // la caméra traverse la devanture vers la pièce finie
     var temEl = $('card-temoignage');
     reg('card-temoignage', {
       ranges: [[0.802, 0.86]], enterW: 0.2, exitW: 0.16, depth: 0.8, frost: 0.6, pin: 0.5,
+      float: 0.25, track: { leg: 5, name: 'temoignage', off: [340, 170], blend: M ? 0.45 : 1 },
       anchor: function (vw, vh) {
         if (M) return [(vw - W(temEl)) / 2, Math.max(84, vh - H(temEl) - 90)];
         return [vw * 0.09, Math.max(128, Math.min(vh * 0.24, vh - H(temEl) - vh * 0.16))];

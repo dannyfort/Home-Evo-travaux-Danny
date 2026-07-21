@@ -193,14 +193,15 @@
     frost = mix(1.0, frost, smoothstep(0.15, 1.0, uEnter));
     vec3 col = mix(sharp, blurc, clamp(frost, 0.0, 1.0));
 
-    // stone tint + centre lift
-    vec3 stone = vec3(0.949, 0.937, 0.914);
-    col = mix(col, stone, 0.11 + 0.05 * fres + uHover * 0.015 + uBreathe * 0.05);
-    col += stone * (1.0 - bev) * 0.055;
+    // carte blanche : corps blanc porcelaine, centre laiteux, lentille claire
+    // au bord (l'esthétique pierre/sable v7 est remplacée — décision 21/07)
+    vec3 stone = vec3(0.988, 0.986, 0.980);
+    col = mix(col, stone, 0.40 + 0.07 * fres + uHover * 0.02 + uBreathe * 0.05);
+    col += stone * (1.0 - bev) * 0.10;
 
-    // 1px inner stroke (sand)
+    // 1px inner stroke (filet blanc)
     float ring = 1.0 - smoothstep(0.0, 1.8, abs(d + 2.2));
-    col = mix(col, vec3(0.894, 0.871, 0.812), ring * 0.4);
+    col = mix(col, vec3(1.0), ring * 0.5);
 
     // specular: global sun + streak that slides with pointer/tilt along top bevel
     vec3 L = normalize(vec3(uSunDir, 0.6));
@@ -326,6 +327,46 @@
     const bounds = cfg.legBounds;
     const XF = 0;
     let externalVideoTex = null; // setVideoTexture() production swap
+
+    /* ---------- matchmove : tracks caméra solvés offline ----------
+       tools/track_legs.py (LK + RANSAC, façon point-tracker AE/Resolve) écrit
+       assets/tracks-v7.json : par leg, par ancre, position vidéo normalisée +
+       échelle relative à la frame de seed, pour CHAQUE frame. Les cartes
+       taguées def.track sont rivetées à ces points-monde : elles suivent
+       exactement la caméra et le mur/élément qu'elles annotent. */
+    let tracks = null;
+    if (cfg.tracksUrl) {
+      fetch(cfg.tracksUrl).then(r => (r.ok ? r.json() : null)).then(j => { tracks = j; }).catch(() => { });
+    }
+    // Échantillonne l'ancre à la frame réellement AFFICHÉE (leg.cur — la cible
+    // du seek lerp, donc les pixels à l'écran), puis inverse le cover-fit du
+    // shader backdrop pour retomber en pixels écran. Passé la couture, on
+    // continue sur le prolongement `ext` dans le leg suivant (masters
+    // pixel-locked : la trajectoire est continue).
+    function sampleTrack(tr) {
+      if (!tracks || !tracks.legs) return null;
+      const L = tracks.legs[tr.leg];
+      const A = L && L.anchors && L.anchors[tr.name];
+      if (!A) return null;
+      const dl = (state.displayLeg == null) ? legIndex(state.p) : state.displayLeg;
+      let arr = A, g = legs[tr.leg];
+      if (dl > tr.leg && A.ext && legs[tr.leg + 1]) { arr = A.ext; g = legs[tr.leg + 1]; }
+      const cur = clamp(g.cur, 0, 1);
+      const n = arr.x.length;
+      const u = cur * (n - 1);
+      const i0 = Math.floor(u), i1 = Math.min(n - 1, i0 + 1), ft = u - i0;
+      const nx = lerp(arr.x[i0], arr.x[i1], ft);
+      const ny = lerp(arr.y[i0], arr.y[i1], ft);
+      const s = lerp(arr.s[i0], arr.s[i1], ft);
+      const va = (g && g.ready) ? g.asp : 16 / 9, sa = state.vw / state.vh;
+      const cx = sa > va ? 1 : sa / va;
+      const cy = sa > va ? va / sa : 1;
+      return {
+        x: ((nx - 0.5) / cx + 0.5) * state.vw,
+        y: ((ny - 0.5) / cy + 0.5) * state.vh,
+        s: s,
+      };
+    }
 
     function legIndex(p) {
       for (let i = legs.length - 1; i >= 0; i--) if (p >= bounds[i]) return i;
@@ -480,9 +521,22 @@
           this.mesh.visible = false;
           glassScene.add(this.mesh);
         }
-        const stiff = 60 + (def.depth || 1) * 55;   // deeper cards lag more
+        // deeper cards lag more — sauf matchmove : une carte rivetée à un mur
+        // ne doit pas glisser derrière la caméra au scrub (ressort quasi-snap)
+        const stiff = def.track ? 420 : 60 + (def.depth || 1) * 55;
         this.sx.k = stiff; this.sy.k = stiff;
         this.sx.d = Math.sqrt(stiff) * 1.9; this.sy.d = Math.sqrt(stiff) * 1.9;
+
+        // connecteur matchmove : pastille sur le point-monde + filet vers la
+        // carte (c'est ce qui rend le tracking lisible, façon annotation AE)
+        if (def.track && def.track.connector !== false) {
+          this.dotEl = document.createElement('div');
+          this.dotEl.style.cssText = 'position:fixed;left:0;top:0;width:9px;height:9px;margin:-5.5px 0 0 -5.5px;border-radius:999px;border:2px solid rgba(255,255,255,0.95);background:rgba(255,255,255,0.30);box-shadow:0 0 12px rgba(255,255,255,0.8),0 1px 6px rgba(38,32,24,0.35);pointer-events:none;visibility:hidden;will-change:transform,opacity;';
+          this.lineEl = document.createElement('div');
+          this.lineEl.style.cssText = 'position:fixed;left:0;top:0;height:1.5px;background:linear-gradient(90deg,rgba(255,255,255,0.92),rgba(255,255,255,0.16));transform-origin:0 50%;pointer-events:none;visibility:hidden;will-change:transform,opacity,width;';
+          this.el.parentNode.insertBefore(this.lineEl, this.el);
+          this.el.parentNode.insertBefore(this.dotEl, this.el);
+        }
 
         // pointer behaviour
         this.el.addEventListener('pointerenter', () => { this.hovered = true; state.lastInteract = performance.now(); });
@@ -513,6 +567,7 @@
         this.el.style.visibility = v ? 'visible' : 'hidden';
         this.el.style.pointerEvents = v ? 'auto' : 'none';
         if (this.mesh) this.mesh.visible = v;
+        if (!v && this.dotEl) { this.dotEl.style.visibility = 'hidden'; this.lineEl.style.visibility = 'hidden'; }
         if (!v) { this.hovered = false; this.tiltX.snap(0); this.tiltY.snap(0); this.hoverU.snap(0); }
       }
       update(dt, frame) {
@@ -575,6 +630,35 @@
         const entBlur = (1 - smooth(0, 0.75, c.enter)) * 6;
         this.el.style.filter = entBlur > 0.2 ? `blur(${entBlur.toFixed(1)}px)` : '';
 
+        // connecteur matchmove : pastille sur le point-monde, filet jusqu'au
+        // bord de la carte (intersection segment centre→point / rectangle)
+        if (this.dotEl) {
+          const a = c.anchorPx;
+          const inView = a && a[0] > -30 && a[0] < state.vw + 30 && a[1] > -30 && a[1] < state.vh + 30;
+          if (a && inView && c.enter > 0.12) {
+            const cx = X + this.w / 2, cy = Y + this.h / 2;
+            const dx = cx - a[0], dy = cy - a[1];
+            const hw = this.w / 2 * sclX, hh = this.h / 2 * sclY;
+            const tEdge = Math.min(Math.abs(dx) > 1e-3 ? hw / Math.abs(dx) : 1, Math.abs(dy) > 1e-3 ? hh / Math.abs(dy) : 1, 1);
+            const ex2 = cx - dx * tEdge, ey2 = cy - dy * tEdge;
+            const len = Math.hypot(ex2 - a[0], ey2 - a[1]);
+            const alpha = clamp(smooth(0.12, 0.7, c.enter) * (1 - (c.exitFade != null ? c.exitFade : c.exit)), 0, 1) * (0.75 + hov * 0.25);
+            this.dotEl.style.visibility = 'visible';
+            this.dotEl.style.opacity = String(alpha);
+            this.dotEl.style.transform = `translate3d(${a[0].toFixed(1)}px, ${a[1].toFixed(1)}px, 0)`;
+            if (len > 26) {
+              const ang = Math.atan2(ey2 - a[1], ex2 - a[0]);
+              this.lineEl.style.visibility = 'visible';
+              this.lineEl.style.opacity = String(alpha * 0.9);
+              this.lineEl.style.width = len.toFixed(1) + 'px';
+              this.lineEl.style.transform = `translate3d(${a[0].toFixed(1)}px, ${a[1].toFixed(1)}px, 0) rotate(${ang.toFixed(4)}rad)`;
+            } else this.lineEl.style.visibility = 'hidden';
+          } else {
+            this.dotEl.style.visibility = 'hidden';
+            this.lineEl.style.visibility = 'hidden';
+          }
+        }
+
         // mesh sync
         if (this.mesh) {
           const mx = X + this.w / 2 - state.vw / 2;
@@ -600,7 +684,10 @@
           u.uQuality.value = state.quality;
         }
       }
-      dispose() { if (this.mesh) { glassScene.remove(this.mesh); this.mat.dispose(); } }
+      dispose() {
+        if (this.mesh) { glassScene.remove(this.mesh); this.mat.dispose(); }
+        if (this.dotEl) { this.dotEl.remove(); this.lineEl.remove(); }
+      }
     }
 
     /* ---------- CardChoreographer ---------- */
@@ -620,6 +707,50 @@
       const enter = first ? 1 : easeOutCubic(enterRaw);
       const exit = clamp((local - (1 - xW)) / xW, 0, 1);
       const [ax, ay] = card.anchor(state.vw, state.vh, ri, p);
+
+      // MATCHMOVE : la carte est rivetée au point-monde solvé (mur, verrière,
+      // devanture…) — position, échelle et parallaxe viennent du track caméra,
+      // pas du point de fuite synthétique. anchor() ne sert plus que de cible
+      // de blend (mobile) et de repli tant que le JSON n'est pas chargé.
+      if (card.track) {
+        const trs = sampleTrack(card.track);
+        if (trs) {
+          const w = card.w || 100, h = card.h || 100;
+          const t = card.track;
+          const sTrk = clamp(Math.pow(Math.max(trs.s, 1e-3), t.sPow != null ? t.sPow : 0.6),
+            t.sMin != null ? t.sMin : 0.62, t.sMax != null ? t.sMax : 1.35);
+          const om = clamp(state.vw / 1600, 0.7, 1.3) * (0.6 + 0.4 * sTrk);
+          const off = t.off || [0, 0];
+          let cxp = trs.x + off[0] * om, cyp = trs.y + off[1] * om;
+          const blend = t.blend != null ? t.blend : 1;
+          if (blend < 1) {
+            cxp = lerp(ax + w / 2, cxp, blend);
+            cyp = lerp(ay + h / 2, cyp, blend);
+            cxp = clamp(cxp, w / 2 + 8, state.vw - w / 2 - 8);
+            cyp = clamp(cyp, h / 2 + 70, state.vh - h / 2 - 12);
+          }
+          // matérialisation SUR le point (pas de chute d'entrée) ; la sortie
+          // balaye peu — c'est la caméra qui quitte le sujet, pas la carte
+          const dyT = (1 - enter) * 14 - exit * 6;
+          const exT = exit * exit * (3.0 - 2.0 * exit);
+          const exDirT = (cxp >= state.vw / 2) ? 1 : -1;
+          const xOutT = exT * exDirT * (state.vw * 0.2 + w * 0.5);
+          const yOutT = -exT * 40;
+          const exitFadeT = smooth(0.5, 1.0, exit);
+          const birthT = 0.42 + 0.58 * easeOutBack(enterRaw);
+          const squashT = Math.sin(enterRaw * Math.PI) * Math.pow(1 - enterRaw, 1.4) * 0.16;
+          const wasVisT = card.cho && card.cho.visible;
+          card.cho = {
+            visible: true, x: cxp - w / 2 + xOutT, y: cyp - h / 2 + yOutT, dy: dyT,
+            z: exit * 60, scale: sTrk * birthT * (1 + exT * 0.06), squash: squashT,
+            enter, exit, exitFade: exitFadeT, exTilt: exT * exDirT * 0.5,
+            active: local > 0.1 && local < 0.9, snap: !wasVisT,
+            anchorPx: [trs.x, trs.y],
+          };
+          return;
+        }
+      }
+
       const dy = (1 - enter) * 38 - exit * 8;
       // PINNED IN SPACE: the card sits at a fixed world point over its subject;
       // the camera dollies through it. zrel > 0 = still ahead of the camera,
