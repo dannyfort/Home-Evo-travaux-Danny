@@ -11,6 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   html, body { margin: 0; padding: 0; background: #f2efe9; }
+  /* write-on du titre hero : par lettre, en CSS pur (aucune dépendance externe) */
+  @keyframes het-tl-in { from { opacity: 0; transform: translateY(42%); filter: blur(9px); } to { opacity: 1; transform: none; filter: none; } }
   body { font-family: 'Instrument Sans', system-ui, sans-serif; color: #26221c; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
   a { color: var(--het-acc, #96522c); }
   a:hover { color: #26211a; }
@@ -85,13 +87,18 @@
 <!-- scroll track: the film's timeline (native scroll, no scroll-jacking) -->
 <div id="het-track" class="het-track" aria-hidden="true" style="height: 1100vh;"></div>
 
+<!-- ===================== HERO IDLE v6 — vie au repos avant le premier scroll =====================
+     Boucle 8 s plan fixe (start = end = frame 0 du leg 1) : éléments en apesanteur + nuages.
+     Visible tant que p ≈ 0 ; fade rapide dès que le scrub commence (hook onFrame). -->
+<video id="hero-idle" muted loop playsinline autoplay preload="auto" poster="assets/chantier.webp?v=v7" style="position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; pointer-events: none; will-change: opacity;"></video>
+
 <!-- ===================== HERO TITLE v6 — typo rotoscopée derrière le monde =====================
      Sandwich : film (canvas z0) → titre (z2) → matte alpha de la frame 0 (tout sauf le ciel).
      Le titre vit dans le ciel, occulté par le bâtiment, les poutres en lévitation et les toits.
      Au premier scroll il S'ÉLÈVE et fade (hook dans onFrame), la matte fade plus vite. -->
 <div id="hero-title-stage" aria-hidden="true" style="position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;">
   <p id="hero-title" style="position: absolute; left: 50%; top: 11vh; transform: translateX(-50%); margin: 0; text-align: center; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-weight: 800; font-size: clamp(42px, 7vw, 128px); line-height: 0.95; letter-spacing: 0.01em; color: #ffffff; text-shadow: 0 2px 44px rgba(38, 32, 24, 0.16); white-space: nowrap; will-change: transform, opacity;">HOME<br>ECO<br>TRAVAUX</p>
-  <img id="hero-matte" src="assets/hero-matte.webp?v=v6" alt="" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: opacity;">
+  <img id="hero-matte" src="assets/hero-matte.webp?v=v7" alt="" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: opacity;">
 </div>
 
 <!-- ===================== GLASS UI LAYER ===================== -->
@@ -452,6 +459,18 @@
 
     // HERO TITLE v6 — le titre s'élève et fade sur le premier scroll ;
     // la matte d'occlusion (statique = frame 0) disparaît plus vite que le film ne bouge.
+    var idle = $('hero-idle');
+    if (idle) {
+      var ip = Math.max(0, Math.min(1, p / 0.012));
+      if (ip >= 1) {
+        if (idle.style.display !== 'none') { idle.style.display = 'none'; if (!idle.paused) idle.pause(); }
+      } else {
+        if (idle.style.display === 'none') idle.style.display = '';
+        idle.style.opacity = (1 - ip).toFixed(3);
+        if (idle.paused && ip < 0.5) { var ipp = idle.play(); if (ipp && ipp.catch) ipp.catch(function () {}); }
+      }
+    }
+
     var tStage = $('hero-title-stage');
     if (tStage) {
       var tp = Math.max(0, Math.min(1, p / 0.03));
@@ -553,15 +572,43 @@
     forceTierC: !window.THREE,
     legs: SCENE_NAMES.map(function (n, i) {
       return {
-        src: 'assets/vid/leg-' + (i + 1) + '.mp4?v=v6',
-        srcMobile: 'assets/vid/leg-' + (i + 1) + '-m.mp4?v=v6',
-        poster: 'assets/' + n + '.webp?v=v6',
+        src: 'assets/vid/leg-' + (i + 1) + '.mp4?v=v7',
+        srcMobile: 'assets/vid/leg-' + (i + 1) + '-m.mp4?v=v7',
+        poster: 'assets/' + n + '.webp?v=v7',
         linger: LINGERS[i],
       };
     }),
     legBounds: [0, 0.22, 0.36, 0.52, 0.68, 0.80, 1.0001],
     onFrame: onFrame,
   });
+
+  // ---------- HERO v6 : boucle idle au repos + write-on GSAP du titre ----------
+  var idleV = $('hero-idle');
+  if (idleV) {
+    idleV.src = (M ? 'assets/vid/idle-m.mp4' : 'assets/vid/idle.mp4') + '?v=v7';
+    var ipr = idleV.play(); if (ipr && ipr.catch) ipr.catch(function () {});
+  }
+  var tEl = $('hero-title');
+  if (tEl) {
+    var tFrag = document.createDocumentFragment(), tNodes = [].slice.call(tEl.childNodes), tIdx = 0;
+    tNodes.forEach(function (nd) {
+      if (nd.nodeType === 3) {
+        var txt = nd.textContent;
+        for (var ci = 0; ci < txt.length; ci++) {
+          var sp = document.createElement('span');
+          sp.className = 'het-tl';
+          sp.style.display = 'inline-block';
+          sp.style.animation = 'het-tl-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both';
+          sp.style.animationDelay = (0.45 + tIdx * 0.055).toFixed(3) + 's';
+          sp.textContent = txt.charAt(ci);
+          tFrag.appendChild(sp);
+          tIdx++;
+        }
+      } else tFrag.appendChild(nd);
+    });
+    tEl.textContent = '';
+    tEl.appendChild(tFrag);
+  }
 
   /* ---------- cartes (Tier A uniquement) ---------- */
   if (api.tier !== 'C') {
